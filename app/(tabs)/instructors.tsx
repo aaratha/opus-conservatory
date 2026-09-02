@@ -1,5 +1,7 @@
 import { ScrollView, Text, View } from 'react-native';
 
+import { useAppStyles } from '@/components/useAppStyles';
+
 const instructors = [
   { id: '1', name: 'Dana Ruiz', instrument: 'Piano' },
   { id: '2', name: 'Marcus Lee', instrument: 'Guitar' },
@@ -7,20 +9,14 @@ const instructors = [
 ];
 
 export default function InstructorsScreen() {
+  const { styles } = useAppStyles();
+
   return (
-    <ScrollView
-      className="flex-1 bg-white dark:bg-neutral-950"
-      contentContainerClassName="gap-3 p-5">
+    <ScrollView style={styles.screen} contentContainerStyle={styles.list}>
       {instructors.map((instructor) => (
-        <View
-          key={instructor.id}
-          className="flex-row items-center justify-between rounded-xl bg-neutral-100 px-4 py-4 dark:bg-neutral-900">
-          <Text className="text-base font-medium text-black dark:text-white">
-            {instructor.name}
-          </Text>
-          <Text className="text-sm text-neutral-500 dark:text-neutral-400">
-            {instructor.instrument}
-          </Text>
+        <View key={instructor.id} style={[styles.card, styles.row]}>
+          <Text style={styles.textMedium}>{instructor.name}</Text>
+          <Text style={styles.textSmallMuted}>{instructor.instrument}</Text>
         </View>
       ))}
     </ScrollView>

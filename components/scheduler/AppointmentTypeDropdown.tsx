@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+
+import { useAppStyles } from '@/components/useAppStyles';
 
 const APPOINTMENT_TYPES = ['Standard lesson', 'Makeup lesson', 'Trial lesson'] as const;
 
@@ -12,19 +14,18 @@ export function AppointmentTypeDropdown({
   value: AppointmentType;
   onChange: (value: AppointmentType) => void;
 }) {
+  const { styles, colors } = useAppStyles();
   const [open, setOpen] = useState(false);
 
   return (
-    <View className="gap-2">
-      <Text className="text-sm text-neutral-500 dark:text-neutral-400">Appointment type</Text>
-      <Pressable
-        onPress={() => setOpen((prev) => !prev)}
-        className="flex-row items-center justify-between rounded-xl bg-neutral-100 px-4 py-3 dark:bg-neutral-900">
-        <Text className="text-sm text-black dark:text-white">{value}</Text>
-        <Text className="text-sm text-neutral-500 dark:text-neutral-400">{open ? '▲' : '▼'}</Text>
+    <View style={{ gap: 8 }}>
+      <Text style={styles.textSmallMuted}>Appointment type</Text>
+      <Pressable onPress={() => setOpen((prev) => !prev)} style={[styles.card, styles.row]}>
+        <Text style={styles.textSmall}>{value}</Text>
+        <Text style={styles.textSmallMuted}>{open ? '▲' : '▼'}</Text>
       </Pressable>
       {open ? (
-        <View className="overflow-hidden rounded-xl bg-neutral-100 dark:bg-neutral-900">
+        <View style={[styles.card, local.list]}>
           {APPOINTMENT_TYPES.map((type, index) => (
             <Pressable
               key={type}
@@ -32,12 +33,14 @@ export function AppointmentTypeDropdown({
                 onChange(type);
                 setOpen(false);
               }}
-              className={`px-4 py-3 ${
-                index < APPOINTMENT_TYPES.length - 1
-                  ? 'border-b border-neutral-200 dark:border-neutral-800'
-                  : ''
-              }`}>
-              <Text className="text-sm text-black dark:text-white">{type}</Text>
+              style={[
+                local.option,
+                index < APPOINTMENT_TYPES.length - 1 && {
+                  borderBottomWidth: 1,
+                  borderBottomColor: colors.border,
+                },
+              ]}>
+              <Text style={styles.textSmall}>{type}</Text>
             </Pressable>
           ))}
         </View>
@@ -45,3 +48,15 @@ export function AppointmentTypeDropdown({
     </View>
   );
 }
+
+const local = StyleSheet.create({
+  list: {
+    padding: 0,
+    gap: 0,
+    overflow: 'hidden',
+  },
+  option: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+});

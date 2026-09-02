@@ -6,24 +6,20 @@ import {
   PurchaseMethodSelector,
   type PurchaseMethod,
 } from '@/components/programs/PurchaseMethodSelector';
+import { useAppStyles } from '@/components/useAppStyles';
 
 export default function CheckoutScreen() {
   const { programId } = useLocalSearchParams<{ programId: string }>();
   const router = useRouter();
+  const { styles } = useAppStyles();
   const [method, setMethod] = useState<PurchaseMethod>('Stripe');
 
   return (
-    <ScrollView
-      className="flex-1 bg-white dark:bg-neutral-950"
-      contentContainerClassName="gap-6 p-5">
-      <Text className="text-sm text-neutral-500 dark:text-neutral-400">
-        Checking out program #{programId}
-      </Text>
+    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+      <Text style={styles.textSmallMuted}>Checking out program #{programId}</Text>
       <PurchaseMethodSelector value={method} onChange={setMethod} />
-      <Pressable
-        onPress={() => router.back()}
-        className="items-center rounded-xl bg-blue-600 py-3 dark:bg-blue-500">
-        <Text className="text-sm font-semibold text-white">Confirm purchase</Text>
+      <Pressable onPress={() => router.back()} style={styles.button}>
+        <Text style={styles.buttonText}>Confirm purchase</Text>
       </Pressable>
     </ScrollView>
   );

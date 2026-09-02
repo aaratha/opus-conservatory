@@ -3,12 +3,13 @@ import { ScrollView } from 'react-native';
 import { FeaturesSection } from '@/components/home/FeaturesSection';
 import { NoticesSection } from '@/components/home/NoticesSection';
 import { UsageGuideSection } from '@/components/home/UsageGuideSection';
+import { useAppStyles } from '@/components/useAppStyles';
 
 export default function HomeScreen() {
+  const { styles } = useAppStyles();
+
   return (
-    <ScrollView
-      className="flex-1 bg-white dark:bg-neutral-950"
-      contentContainerClassName="gap-8 p-5">
+    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <NoticesSection />
       <FeaturesSection />
       <UsageGuideSection />

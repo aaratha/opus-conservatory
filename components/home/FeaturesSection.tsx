@@ -1,5 +1,7 @@
 import { Text, View } from 'react-native';
 
+import { useAppStyles } from '@/components/useAppStyles';
+
 const features = [
   { id: '1', title: 'Scheduler', description: 'Book, reschedule, and track your lessons.' },
   { id: '2', title: 'Practice Log', description: 'Time your practice or log it manually.' },
@@ -7,16 +9,16 @@ const features = [
 ];
 
 export function FeaturesSection() {
+  const { styles } = useAppStyles();
+
   return (
-    <View className="gap-3">
-      <Text className="text-lg font-semibold text-black dark:text-white">Features</Text>
-      <View className="gap-2">
+    <View style={styles.section}>
+      <Text style={styles.sectionTitle}>Features</Text>
+      <View style={styles.section}>
         {features.map((feature) => (
-          <View key={feature.id} className="rounded-xl bg-neutral-100 px-4 py-3 dark:bg-neutral-900">
-            <Text className="text-sm font-medium text-black dark:text-white">{feature.title}</Text>
-            <Text className="text-sm text-neutral-500 dark:text-neutral-400">
-              {feature.description}
-            </Text>
+          <View key={feature.id} style={styles.card}>
+            <Text style={styles.textMedium}>{feature.title}</Text>
+            <Text style={styles.textSmallMuted}>{feature.description}</Text>
           </View>
         ))}
       </View>

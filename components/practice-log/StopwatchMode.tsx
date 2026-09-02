@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+
+import { useAppStyles } from '@/components/useAppStyles';
+import { fontSize } from '@/constants/theme';
 
 function formatElapsed(totalSeconds: number) {
   const minutes = Math.floor(totalSeconds / 60)
@@ -10,6 +13,7 @@ function formatElapsed(totalSeconds: number) {
 }
 
 export function StopwatchMode() {
+  const { styles } = useAppStyles();
   const [isRunning, setIsRunning] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -29,27 +33,44 @@ export function StopwatchMode() {
   }, [isRunning]);
 
   return (
-    <View className="items-center gap-6 rounded-xl bg-neutral-100 py-10 dark:bg-neutral-900">
-      <Text className="text-5xl font-semibold text-black dark:text-white">
-        {formatElapsed(elapsedSeconds)}
-      </Text>
-      <View className="flex-row gap-3">
+    <View style={[styles.card, local.card]}>
+      <Text style={[styles.text, local.display]}>{formatElapsed(elapsedSeconds)}</Text>
+      <View style={local.controls}>
         <Pressable
           onPress={() => setIsRunning((prev) => !prev)}
-          className="rounded-full bg-blue-600 px-6 py-3 dark:bg-blue-500">
-          <Text className="text-sm font-semibold text-white">
-            {isRunning ? 'Pause' : 'Start'}
-          </Text>
+          style={[styles.button, local.button]}>
+          <Text style={styles.buttonText}>{isRunning ? 'Pause' : 'Start'}</Text>
         </Pressable>
         <Pressable
           onPress={() => {
             setIsRunning(false);
             setElapsedSeconds(0);
           }}
-          className="rounded-full bg-neutral-200 px-6 py-3 dark:bg-neutral-800">
-          <Text className="text-sm font-semibold text-black dark:text-white">Reset</Text>
+          style={[styles.buttonGhost, local.button]}>
+          <Text style={styles.buttonGhostText}>Reset</Text>
         </Pressable>
       </View>
     </View>
   );
 }
+
+const local = StyleSheet.create({
+  card: {
+    alignItems: 'center',
+    paddingVertical: 40,
+  },
+  display: {
+    fontSize: fontSize.display,
+    fontWeight: '600',
+  },
+  controls: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  button: {
+    alignItems: 'center',
+    borderRadius: 999,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+  },
+});

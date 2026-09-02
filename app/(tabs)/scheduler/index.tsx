@@ -2,15 +2,16 @@ import { Link } from 'expo-router';
 import { Pressable, ScrollView, Text } from 'react-native';
 
 import { UpcomingLessonsSection } from '@/components/scheduler/UpcomingLessonsSection';
+import { useAppStyles } from '@/components/useAppStyles';
 
 export default function SchedulerScreen() {
+  const { styles } = useAppStyles();
+
   return (
-    <ScrollView
-      className="flex-1 bg-white dark:bg-neutral-950"
-      contentContainerClassName="gap-8 p-5">
+    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <Link href="/scheduler/new" asChild>
-        <Pressable className="items-center rounded-xl bg-blue-600 py-3 dark:bg-blue-500">
-          <Text className="text-sm font-semibold text-white">Schedule a new lesson</Text>
+        <Pressable style={styles.button}>
+          <Text style={styles.buttonText}>Schedule a new lesson</Text>
         </Pressable>
       </Link>
       <UpcomingLessonsSection />

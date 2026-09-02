@@ -1,4 +1,6 @@
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+
+import { useAppStyles } from '@/components/useAppStyles';
 
 const steps = [
   'Find your teacher under Instructors.',
@@ -8,17 +10,29 @@ const steps = [
 ];
 
 export function UsageGuideSection() {
+  const { styles } = useAppStyles();
+
   return (
-    <View className="gap-3">
-      <Text className="text-lg font-semibold text-black dark:text-white">Usage guide</Text>
-      <View className="gap-2 rounded-xl bg-neutral-100 px-4 py-3 dark:bg-neutral-900">
+    <View style={styles.section}>
+      <Text style={styles.sectionTitle}>Usage guide</Text>
+      <View style={styles.card}>
         {steps.map((step, index) => (
-          <View key={step} className="flex-row gap-2">
-            <Text className="text-sm text-neutral-500 dark:text-neutral-400">{index + 1}.</Text>
-            <Text className="flex-1 text-sm text-black dark:text-white">{step}</Text>
+          <View key={step} style={local.step}>
+            <Text style={styles.textSmallMuted}>{index + 1}.</Text>
+            <Text style={[styles.textSmall, local.stepText]}>{step}</Text>
           </View>
         ))}
       </View>
     </View>
   );
 }
+
+const local = StyleSheet.create({
+  step: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  stepText: {
+    flex: 1,
+  },
+});

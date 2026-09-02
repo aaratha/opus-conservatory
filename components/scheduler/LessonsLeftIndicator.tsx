@@ -1,5 +1,7 @@
 import { Text, View } from 'react-native';
 
+import { useAppStyles } from '@/components/useAppStyles';
+
 export function LessonsLeftIndicator({
   lessonsUsed,
   lessonsAvailable,
@@ -7,12 +9,13 @@ export function LessonsLeftIndicator({
   lessonsUsed: number;
   lessonsAvailable: number;
 }) {
+  const { styles, colors } = useAppStyles();
   const remaining = Math.max(lessonsAvailable - lessonsUsed, 0);
 
   return (
-    <View className="flex-row items-center justify-between rounded-xl bg-neutral-100 px-4 py-3 dark:bg-neutral-900">
-      <Text className="text-sm text-black dark:text-white">Lessons remaining</Text>
-      <Text className="text-sm font-semibold text-blue-600 dark:text-blue-400">
+    <View style={[styles.card, styles.row]}>
+      <Text style={styles.textSmall}>Lessons remaining</Text>
+      <Text style={[styles.textSmall, { fontWeight: '600', color: colors.tint }]}>
         {remaining} / {lessonsAvailable}
       </Text>
     </View>

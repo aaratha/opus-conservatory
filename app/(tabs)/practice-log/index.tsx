@@ -4,35 +4,30 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 
 import { ManualLoggingMode } from '@/components/practice-log/ManualLoggingMode';
 import { StopwatchMode } from '@/components/practice-log/StopwatchMode';
+import { useAppStyles } from '@/components/useAppStyles';
 
 type Mode = 'stopwatch' | 'manual';
 
+const OPTIONS = [
+  { key: 'stopwatch', label: 'Stopwatch' },
+  { key: 'manual', label: 'Manual' },
+] as const;
+
 export default function PracticeLogScreen() {
+  const { styles } = useAppStyles();
   const [mode, setMode] = useState<Mode>('stopwatch');
 
   return (
-    <ScrollView
-      className="flex-1 bg-white dark:bg-neutral-950"
-      contentContainerClassName="gap-6 p-5">
-      <View className="flex-row rounded-xl bg-neutral-100 p-1 dark:bg-neutral-900">
-        {(
-          [
-            { key: 'stopwatch', label: 'Stopwatch' },
-            { key: 'manual', label: 'Manual' },
-          ] as const
-        ).map((option) => {
+    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+      <View style={styles.segment}>
+        {OPTIONS.map((option) => {
           const isActive = option.key === mode;
           return (
             <Pressable
               key={option.key}
               onPress={() => setMode(option.key)}
-              className={`flex-1 items-center rounded-lg py-2 ${
-                isActive ? 'bg-white dark:bg-neutral-950' : ''
-              }`}>
-              <Text
-                className={`text-sm font-medium ${
-                  isActive ? 'text-black dark:text-white' : 'text-neutral-500 dark:text-neutral-400'
-                }`}>
+              style={[styles.segmentOption, isActive && styles.segmentOptionActive]}>
+              <Text style={[styles.segmentText, isActive && styles.segmentTextActive]}>
                 {option.label}
               </Text>
             </Pressable>
@@ -43,10 +38,8 @@ export default function PracticeLogScreen() {
       {mode === 'stopwatch' ? <StopwatchMode /> : <ManualLoggingMode />}
 
       <Link href="/practice-log/leaderboard" asChild>
-        <Pressable className="items-center rounded-xl bg-neutral-100 py-3 dark:bg-neutral-900">
-          <Text className="text-sm font-medium text-blue-600 dark:text-blue-400">
-            View leaderboard
-          </Text>
+        <Pressable style={styles.buttonGhost}>
+          <Text style={styles.buttonGhostText}>View leaderboard</Text>
         </Pressable>
       </Link>
     </ScrollView>

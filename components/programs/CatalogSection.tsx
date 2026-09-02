@@ -1,5 +1,7 @@
 import { Link } from 'expo-router';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+
+import { useAppStyles } from '@/components/useAppStyles';
 
 const catalog = [
   { id: '1', name: '4-lesson bank', price: '$140' },
@@ -8,21 +10,25 @@ const catalog = [
 ];
 
 export function CatalogSection() {
+  const { styles } = useAppStyles();
+
   return (
-    <View className="gap-3">
-      <Text className="text-lg font-semibold text-black dark:text-white">Catalog</Text>
-      <View className="gap-2">
+    <View style={styles.section}>
+      <Text style={styles.sectionTitle}>Catalog</Text>
+      <View style={styles.section}>
         {catalog.map((program) => (
-          <View
-            key={program.id}
-            className="flex-row items-center justify-between rounded-xl bg-neutral-100 px-4 py-3 dark:bg-neutral-900">
+          <View key={program.id} style={[styles.card, styles.row]}>
             <View>
-              <Text className="text-sm font-medium text-black dark:text-white">{program.name}</Text>
-              <Text className="text-sm text-neutral-500 dark:text-neutral-400">{program.price}</Text>
+              <Text style={styles.textMedium}>{program.name}</Text>
+              <Text style={styles.textSmallMuted}>{program.price}</Text>
             </View>
-            <Link href={{ pathname: '/programs/checkout', params: { programId: program.id } }} asChild>
-              <Pressable className="rounded-full bg-blue-600 px-4 py-2 dark:bg-blue-500">
-                <Text className="text-sm font-semibold text-white">Buy</Text>
+            <Link
+              href={{ pathname: '/programs/checkout', params: { programId: program.id } }}
+              asChild>
+              <Pressable style={StyleSheet.flatten([styles.pill, styles.pillActive])}>
+                <Text style={[styles.pillText, styles.pillTextActive, { fontWeight: '600' }]}>
+                  Buy
+                </Text>
               </Pressable>
             </Link>
           </View>
