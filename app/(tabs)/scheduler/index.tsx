@@ -11,7 +11,7 @@ export default function SchedulerScreen() {
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <Link href="/scheduler/new" asChild>
         <Pressable style={styles.button}>
-          <Text style={styles.buttonText}>Schedule a new lesson</Text>
+          <Text style={styles.buttonText}>+ Schedule a new lesson</Text>
         </Pressable>
       </Link>
       <UpcomingLessonsSection />

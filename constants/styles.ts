@@ -24,13 +24,33 @@ export function createStyles(scheme: ColorScheme) {
       gap: spacing.sm,
     },
 
+    hero: {
+      gap: spacing.xs,
+    },
+    heroTitle: {
+      fontSize: fontSize.hero,
+      fontWeight: '700',
+      color: c.text,
+    },
+    heroSubtitle: {
+      fontSize: fontSize.base,
+      color: c.muted,
+    },
+
     section: {
       gap: spacing.md,
     },
     sectionTitle: {
       fontSize: fontSize.lg,
-      fontWeight: '600',
+      fontWeight: '700',
       color: c.text,
+    },
+    eyebrow: {
+      fontSize: fontSize.sm,
+      fontWeight: '700',
+      color: c.secondary,
+      textTransform: 'uppercase',
+      letterSpacing: 0.6,
     },
 
     card: {
@@ -40,10 +60,19 @@ export function createStyles(scheme: ColorScheme) {
       paddingVertical: spacing.md,
       gap: spacing.sm,
     },
+    cardHighlight: {
+      borderWidth: 2,
+      borderColor: c.tint,
+    },
     row: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
+    },
+    rowStart: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.md,
     },
     wrap: {
       flexDirection: 'row',
@@ -57,7 +86,7 @@ export function createStyles(scheme: ColorScheme) {
     },
     textMedium: {
       fontSize: fontSize.base,
-      fontWeight: '500',
+      fontWeight: '600',
       color: c.text,
     },
     textMuted: {
@@ -85,7 +114,7 @@ export function createStyles(scheme: ColorScheme) {
     },
     buttonText: {
       fontSize: fontSize.sm,
-      fontWeight: '600',
+      fontWeight: '700',
       color: c.tintText,
     },
     buttonDisabled: {
@@ -102,12 +131,13 @@ export function createStyles(scheme: ColorScheme) {
     },
     buttonGhostText: {
       fontSize: fontSize.sm,
-      fontWeight: '600',
+      fontWeight: '700',
       color: c.tint,
     },
 
     link: {
       fontSize: fontSize.sm,
+      fontWeight: '600',
       color: c.tint,
     },
 
@@ -115,37 +145,55 @@ export function createStyles(scheme: ColorScheme) {
       borderRadius: radii.pill,
       paddingHorizontal: spacing.lg,
       paddingVertical: spacing.sm,
-      backgroundColor: c.surface,
+      backgroundColor: c.surfaceAlt,
     },
     pillActive: {
       backgroundColor: c.tint,
     },
     pillText: {
       fontSize: fontSize.sm,
+      fontWeight: '500',
       color: c.text,
     },
     pillTextActive: {
       color: c.tintText,
+      fontWeight: '700',
+    },
+
+    badge: {
+      alignSelf: 'flex-start',
+      borderRadius: radii.pill,
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.xs,
+      backgroundColor: c.surfaceAlt,
+    },
+    badgeText: {
+      fontSize: fontSize.sm,
+      fontWeight: '600',
+      color: c.muted,
     },
 
     segment: {
       flexDirection: 'row',
-      backgroundColor: c.surface,
+      backgroundColor: c.surfaceAlt,
       borderRadius: radii.lg,
       padding: spacing.xs,
     },
     segmentOption: {
       flex: 1,
+      flexDirection: 'row',
       alignItems: 'center',
+      justifyContent: 'center',
+      gap: spacing.xs,
       borderRadius: radii.md,
       paddingVertical: spacing.sm,
     },
     segmentOptionActive: {
-      backgroundColor: c.background,
+      backgroundColor: c.surface,
     },
     segmentText: {
       fontSize: fontSize.sm,
-      fontWeight: '500',
+      fontWeight: '600',
       color: c.muted,
     },
     segmentTextActive: {
@@ -158,6 +206,33 @@ export function createStyles(scheme: ColorScheme) {
       paddingVertical: spacing.md,
       backgroundColor: c.background,
       color: c.text,
+      borderWidth: 1,
+      borderColor: c.border,
+    },
+
+    progressTrack: {
+      height: 8,
+      borderRadius: radii.pill,
+      backgroundColor: c.surfaceAlt,
+      overflow: 'hidden',
+    },
+    progressFill: {
+      height: '100%',
+      borderRadius: radii.pill,
+      backgroundColor: c.tint,
+    },
+
+    avatar: {
+      width: 44,
+      height: 44,
+      borderRadius: radii.pill,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    avatarText: {
+      fontSize: fontSize.base,
+      fontWeight: '700',
+      color: '#FFFFFF',
     },
 
     divider: {

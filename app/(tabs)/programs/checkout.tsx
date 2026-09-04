@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, Text } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 
 import {
   PurchaseMethodSelector,
@@ -16,7 +16,10 @@ export default function CheckoutScreen() {
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
-      <Text style={styles.textSmallMuted}>Checking out program #{programId}</Text>
+      <View style={styles.hero}>
+        <Text style={styles.sectionTitle}>You're almost there 🎉</Text>
+        <Text style={styles.textMuted}>Choose how you'd like to pay for bank #{programId}.</Text>
+      </View>
       <PurchaseMethodSelector value={method} onChange={setMethod} />
       <Pressable onPress={() => router.back()} style={styles.button}>
         <Text style={styles.buttonText}>Confirm purchase</Text>

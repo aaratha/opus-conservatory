@@ -1,5 +1,6 @@
 import { SymbolView } from 'expo-symbols';
 import { Tabs } from 'expo-router';
+import { Platform } from 'react-native';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -12,6 +13,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarPosition: Platform.OS === 'web' ? 'top' : 'bottom',
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
@@ -77,7 +79,7 @@ export default function TabLayout() {
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <SymbolView
-              name={{ ios: 'bag', android: 'inventory_2', web: 'inventory_2' }}
+              name={{ ios: 'music.note.list', android: 'library_music', web: 'library_music' }}
               tintColor={color}
               size={28}
             />

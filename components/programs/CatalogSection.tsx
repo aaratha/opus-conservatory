@@ -1,12 +1,12 @@
 import { Link } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
 import { useAppStyles } from '@/components/useAppStyles';
 
 const catalog = [
-  { id: '1', name: '4-lesson bank', price: '$140' },
-  { id: '2', name: '8-lesson bank', price: '$260' },
-  { id: '3', name: '12-lesson bank', price: '$375' },
+  { id: '1', lessons: 4, price: 140, popular: false },
+  { id: '2', lessons: 8, price: 260, popular: true },
+  { id: '3', lessons: 12, price: 375, popular: false },
 ];
 
 export function CatalogSection() {
@@ -17,18 +17,22 @@ export function CatalogSection() {
       <Text style={styles.sectionTitle}>Catalog</Text>
       <View style={styles.section}>
         {catalog.map((program) => (
-          <View key={program.id} style={[styles.card, styles.row]}>
-            <View>
-              <Text style={styles.textMedium}>{program.name}</Text>
-              <Text style={styles.textSmallMuted}>{program.price}</Text>
+          <View key={program.id} style={[styles.card, program.popular && styles.cardHighlight]}>
+            {program.popular ? <Text style={styles.eyebrow}>Most popular</Text> : null}
+            <View style={styles.row}>
+              <View>
+                <Text style={styles.textMedium}>{program.lessons}-lesson bank</Text>
+                <Text style={styles.textSmallMuted}>
+                  ${(program.price / program.lessons).toFixed(0)} per lesson
+                </Text>
+              </View>
+              <Text style={styles.heroTitle}>${program.price}</Text>
             </View>
             <Link
               href={{ pathname: '/programs/checkout', params: { programId: program.id } }}
               asChild>
-              <Pressable style={StyleSheet.flatten([styles.pill, styles.pillActive])}>
-                <Text style={[styles.pillText, styles.pillTextActive, { fontWeight: '600' }]}>
-                  Buy
-                </Text>
+              <Pressable style={styles.button}>
+                <Text style={styles.buttonText}>Buy this bank</Text>
               </Pressable>
             </Link>
           </View>

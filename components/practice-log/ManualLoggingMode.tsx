@@ -33,7 +33,7 @@ export function ManualLoggingMode() {
         />
       </View>
       <Pressable style={styles.button}>
-        <Text style={styles.buttonText}>Log practice</Text>
+        <Text style={styles.buttonText}>📝 Log practice</Text>
       </Pressable>
     </View>
   );

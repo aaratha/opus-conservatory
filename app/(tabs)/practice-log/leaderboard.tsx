@@ -1,5 +1,6 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { Avatar } from '@/components/Avatar';
 import { useAppStyles } from '@/components/useAppStyles';
 
 const rankings = [
@@ -9,31 +10,36 @@ const rankings = [
   { id: '4', name: 'Sam Patel', minutes: 275 },
 ];
 
+const MEDALS = ['🥇', '🥈', '🥉'];
+
 export default function LeaderboardScreen() {
   const { styles } = useAppStyles();
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.list}>
-      {rankings.map((entry, index) => (
-        <View key={entry.id} style={[styles.card, styles.row]}>
-          <View style={local.name}>
-            <Text style={[styles.textSmallMuted, local.rank]}>{index + 1}</Text>
-            <Text style={styles.textMedium}>{entry.name}</Text>
+      {rankings.map((entry, index) => {
+        const isYou = entry.name === 'You';
+        return (
+          <View
+            key={entry.id}
+            style={[styles.card, styles.row, isYou && styles.cardHighlight]}>
+            <View style={styles.rowStart}>
+              <Text style={local.rank}>{MEDALS[index] ?? `#${index + 1}`}</Text>
+              <Avatar name={entry.name} size={36} />
+              <Text style={styles.textMedium}>{entry.name}</Text>
+            </View>
+            <Text style={styles.textSmallMuted}>{entry.minutes} min</Text>
           </View>
-          <Text style={styles.textSmallMuted}>{entry.minutes} min</Text>
-        </View>
-      ))}
+        );
+      })}
     </ScrollView>
   );
 }
 
 const local = StyleSheet.create({
-  name: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
   rank: {
-    width: 20,
+    fontSize: 18,
+    width: 28,
+    textAlign: 'center',
   },
 });

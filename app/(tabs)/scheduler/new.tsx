@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { Pressable, ScrollView, Text } from 'react-native';
 
 import {
-  AppointmentTypeDropdown,
+  AppointmentTypeSelector,
   type AppointmentType,
-} from '@/components/scheduler/AppointmentTypeDropdown';
+} from '@/components/scheduler/AppointmentTypeSelector';
 import { InstructorAvailability } from '@/components/scheduler/InstructorAvailability';
 import { LessonsLeftIndicator } from '@/components/scheduler/LessonsLeftIndicator';
 import { useAppStyles } from '@/components/useAppStyles';
@@ -32,7 +32,7 @@ export default function ScheduleNewLessonScreen() {
           booking.
         </Text>
       ) : null}
-      <AppointmentTypeDropdown value={appointmentType} onChange={setAppointmentType} />
+      <AppointmentTypeSelector value={appointmentType} onChange={setAppointmentType} />
       <InstructorAvailability
         instructorName="Dana Ruiz"
         selectedSlot={selectedSlot}

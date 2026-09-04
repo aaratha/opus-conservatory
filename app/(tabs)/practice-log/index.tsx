@@ -9,8 +9,8 @@ import { useAppStyles } from '@/components/useAppStyles';
 type Mode = 'stopwatch' | 'manual';
 
 const OPTIONS = [
-  { key: 'stopwatch', label: 'Stopwatch' },
-  { key: 'manual', label: 'Manual' },
+  { key: 'stopwatch', label: 'Stopwatch', icon: '⏱️' },
+  { key: 'manual', label: 'Manual', icon: '✏️' },
 ] as const;
 
 export default function PracticeLogScreen() {
@@ -27,6 +27,7 @@ export default function PracticeLogScreen() {
               key={option.key}
               onPress={() => setMode(option.key)}
               style={[styles.segmentOption, isActive && styles.segmentOptionActive]}>
+              <Text>{option.icon}</Text>
               <Text style={[styles.segmentText, isActive && styles.segmentTextActive]}>
                 {option.label}
               </Text>
@@ -39,7 +40,7 @@ export default function PracticeLogScreen() {
 
       <Link href="/practice-log/leaderboard" asChild>
         <Pressable style={styles.buttonGhost}>
-          <Text style={styles.buttonGhostText}>View leaderboard</Text>
+          <Text style={styles.buttonGhostText}>🏆 View leaderboard</Text>
         </Pressable>
       </Link>
     </ScrollView>

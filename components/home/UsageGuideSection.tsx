@@ -10,15 +10,17 @@ const steps = [
 ];
 
 export function UsageGuideSection() {
-  const { styles } = useAppStyles();
+  const { styles, colors } = useAppStyles();
 
   return (
     <View style={styles.section}>
-      <Text style={styles.sectionTitle}>Usage guide</Text>
+      <Text style={styles.sectionTitle}>Getting started</Text>
       <View style={styles.card}>
         {steps.map((step, index) => (
           <View key={step} style={local.step}>
-            <Text style={styles.textSmallMuted}>{index + 1}.</Text>
+            <View style={[local.number, { backgroundColor: colors.tint }]}>
+              <Text style={[local.numberText, { color: colors.tintText }]}>{index + 1}</Text>
+            </View>
             <Text style={[styles.textSmall, local.stepText]}>{step}</Text>
           </View>
         ))}
@@ -30,7 +32,19 @@ export function UsageGuideSection() {
 const local = StyleSheet.create({
   step: {
     flexDirection: 'row',
-    gap: 8,
+    alignItems: 'center',
+    gap: 12,
+  },
+  number: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  numberText: {
+    fontSize: 12,
+    fontWeight: '700',
   },
   stepText: {
     flex: 1,

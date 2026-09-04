@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import Colors from '@/constants/Colors';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -43,9 +44,24 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const base = colorScheme === 'dark' ? DarkTheme : DefaultTheme;
+  const c = Colors[colorScheme];
+
+  const theme = {
+    ...base,
+    colors: {
+      ...base.colors,
+      primary: c.tint,
+      background: c.background,
+      card: c.background,
+      text: c.text,
+      border: c.border,
+      notification: c.tint,
+    },
+  };
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={theme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>

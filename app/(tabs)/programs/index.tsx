@@ -11,7 +11,7 @@ export default function ProgramsScreen() {
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <Link href="/programs/my-programs" asChild>
         <Pressable style={styles.buttonGhost}>
-          <Text style={styles.buttonGhostText}>View my programs</Text>
+          <Text style={styles.buttonGhostText}>🎒 View my programs</Text>
         </Pressable>
       </Link>
       <CatalogSection />
