@@ -1,0 +1,168 @@
+---
+import { PortableText } from 'astro-portabletext';
+import { defineQuery } from 'groq';
+import { sanityClient } from 'sanity:client';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { urlFor } from '../../lib/sanity';
+
+const INSTRUCTORS_QUERY = defineQuery(
+	`*[_type == "instructor"] | order(name asc){ _id, name, photo, instruments, bio, email }`
+);
+
+const instructors = await sanityClient.fetch(INSTRUCTORS_QUERY);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title="Instructors" description="Meet our instructors" />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Instructors</h1>
+			<ul class="instructors">
+				{
+					instructors.map((instructor) => (
+						<li class="instructor-card">
+							<div class="instructor-summary">
+								{instructor.photo ? (
+									<img
+										src={urlFor(instructor.photo).width(600).height(600).url()}
+										alt=""
+										width="300"
+										height="300"
+										class="instructor-photo"
+									/>
+								) : (
+									<div class="instructor-photo instructor-photo-placeholder" aria-hidden="true" />
+								)}
+								<div class="instructor-info">
+									<h2>{instructor.name}</h2>
+									{instructor.instruments && (
+										<p class="instruments">{instructor.instruments.join(', ')}</p>
+									)}
+								</div>
+							</div>
+							{(instructor.bio || instructor.email) && (
+								<details class="instructor-bio">
+									<summary>Bio</summary>
+									<div class="bio-content">
+										{instructor.bio && <PortableText value={instructor.bio} />}
+										{instructor.email && (
+											<p class="email">
+												<a href={`mailto:${instructor.email}`}>{instructor.email}</a>
+											</p>
+										)}
+									</div>
+								</details>
+							)}
+						</li>
+					))
+				}
+			</ul>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		max-width: 960px;
+	}
+
+	.instructors {
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+		list-style: none;
+		margin: 2rem 0 0;
+		padding: 0;
+	}
+
+	.instructor-card {
+		border: 1px solid rgba(var(--gray), 25%);
+		border-radius: 12px;
+		padding: 1.25rem;
+		background: white;
+		box-shadow: 0 2px 8px rgba(var(--black), 4%);
+		transition: box-shadow 0.2s ease;
+	}
+
+	.instructor-card:hover {
+		box-shadow: 0 4px 16px rgba(var(--black), 8%);
+	}
+
+	.instructor-summary {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		align-items: center;
+		gap: 1.5rem;
+	}
+
+	.instructor-photo {
+		display: block;
+		border-radius: 16px;
+		object-fit: cover;
+		aspect-ratio: 1 / 1;
+		width: 100%;
+		height: auto;
+	}
+
+	.instructor-photo-placeholder {
+		background: rgb(var(--gray-light));
+	}
+
+	.instructor-info h2 {
+		margin: 0;
+		font-size: 1.75rem;
+		line-height: 1.3;
+	}
+
+	.instructors .instruments {
+		margin: 0.5rem 0 0;
+		font-size: 1.2rem;
+		color: rgb(var(--gray));
+	}
+
+	.instructor-bio {
+		margin-top: 1rem;
+		border-top: 1px solid rgba(var(--gray), 20%);
+		padding-top: 0.75rem;
+	}
+
+	.instructor-bio summary {
+		cursor: pointer;
+		font-weight: 600;
+		font-size: 0.9rem;
+		color: var(--accent);
+		list-style: none;
+	}
+
+	.instructor-bio summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.instructor-bio summary::before {
+		content: '▸';
+		display: inline-block;
+		margin-right: 0.4em;
+		transition: transform 0.15s ease;
+	}
+
+	.instructor-bio[open] summary::before {
+		transform: rotate(90deg);
+	}
+
+	.bio-content {
+		margin-top: 0.75rem;
+		font-size: 0.95rem;
+		line-height: 1.6;
+	}
+
+	.bio-content .email {
+		margin-top: 0.75rem;
+	}
+</style>

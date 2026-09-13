@@ -1,0 +1,40 @@
+---
+import { defineQuery } from 'groq';
+import { sanityClient } from 'sanity:client';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { urlFor } from '../../lib/sanity';
+
+const GALLERIES_QUERY = defineQuery(
+	`*[_type == "gallery" && defined(slug.current)] | order(title asc){ _id, title, slug, "cover": images[0] }`
+);
+
+const galleries = await sanityClient.fetch(GALLERIES_QUERY);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title="Galleries" description="Photo galleries" />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Galleries</h1>
+			<ul>
+				{
+					galleries.map((gallery) => (
+						<li>
+							{gallery.cover && (
+								<img src={urlFor(gallery.cover).width(300).height(200).url()} alt={gallery.cover.alt ?? ''} />
+							)}
+							<a href={`/galleries/${gallery.slug.current}/`}>{gallery.title}</a>
+						</li>
+					))
+				}
+			</ul>
+		</main>
+		<Footer />
+	</body>
+</html>

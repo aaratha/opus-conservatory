@@ -1,0 +1,65 @@
+---
+import { PortableText } from 'astro-portabletext';
+import { defineQuery } from 'groq';
+import { sanityClient } from 'sanity:client';
+import BaseHead from '../../components/BaseHead.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { urlFor } from '../../lib/sanity';
+
+export async function getStaticPaths() {
+	const EVENT_SLUGS_QUERY = defineQuery(
+		`*[_type == "event" && defined(slug.current)]{ "params": { "slug": slug.current } }`
+	);
+	return await sanityClient.fetch(EVENT_SLUGS_QUERY);
+}
+
+const EVENT_QUERY = defineQuery(
+	`*[_type == "event" && slug.current == $slug][0]{
+		title, startDateTime, endDateTime, location, coverImage, description,
+		instructors[]->{ _id, name }
+	}`
+);
+
+const { slug } = Astro.params;
+const event = await sanityClient.fetch(EVENT_QUERY, { slug });
+
+if (!event) throw new Error(`Event not found: ${slug}`);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={event.title} description={event.title} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<article>
+				{event.coverImage && <img src={urlFor(event.coverImage).width(1000).url()} alt="" />}
+				<h1>{event.title}</h1>
+				<p>
+					<FormattedDate date={new Date(event.startDateTime)} />
+					{event.endDateTime && <> – <FormattedDate date={new Date(event.endDateTime)} /></>}
+				</p>
+				{event.location && <p>{event.location}</p>}
+				{event.description && <PortableText value={event.description} />}
+				{
+					event.instructors && event.instructors.length > 0 && (
+						<p>
+							Featuring:{' '}
+							{event.instructors.map((instructor, i) => (
+								<>
+									{i > 0 && ', '}
+									{instructor.name}
+								</>
+							))}
+						</p>
+					)
+				}
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>

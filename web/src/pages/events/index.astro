@@ -1,0 +1,39 @@
+---
+import { defineQuery } from 'groq';
+import { sanityClient } from 'sanity:client';
+import BaseHead from '../../components/BaseHead.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+
+const EVENTS_QUERY = defineQuery(
+	`*[_type == "event" && defined(slug.current)] | order(startDateTime asc){ _id, title, slug, startDateTime, location }`
+);
+
+const events = await sanityClient.fetch(EVENTS_QUERY);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title="Events" description="Upcoming events" />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Events</h1>
+			<ul>
+				{
+					events.map((event) => (
+						<li>
+							<a href={`/events/${event.slug.current}/`}>{event.title}</a>
+							<FormattedDate date={new Date(event.startDateTime)} />
+							{event.location && <span> — {event.location}</span>}
+						</li>
+					))
+				}
+			</ul>
+		</main>
+		<Footer />
+	</body>
+</html>
