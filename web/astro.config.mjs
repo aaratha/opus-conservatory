@@ -15,7 +15,8 @@ const { PUBLIC_SANITY_PROJECT_ID, PUBLIC_SANITY_DATASET } = loadEnv(
 
 // https://astro.build/config
 export default defineConfig({
-    site: 'https://example.com',
+    site: 'https://aaratha.github.io',
+    base: '/opus-conservatory',
     integrations: [
         mdx(),
         sitemap(),
