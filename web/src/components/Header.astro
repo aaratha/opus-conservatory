@@ -141,7 +141,7 @@ const programs = [
 		color: rgb(var(--gray));
 	}
 	.dropdown-menu {
-		display: none;
+		display: flex;
 		position: absolute;
 		top: 100%;
 		left: 0;
@@ -151,10 +151,18 @@ const programs = [
 		box-shadow: var(--box-shadow);
 		padding: 0.5em;
 		flex-direction: column;
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+		transform: translateY(-6px);
+		transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
 	}
 	.dropdown:hover .dropdown-menu,
 	.dropdown:focus-within .dropdown-menu {
-		display: flex;
+		opacity: 1;
+		visibility: visible;
+		pointer-events: auto;
+		transform: translateY(0);
 	}
 	.dropdown:hover .dropdown-trigger,
 	.dropdown:focus-within .dropdown-trigger {
@@ -196,9 +204,12 @@ const programs = [
 		font-weight: 700;
 		text-decoration: none;
 		white-space: nowrap;
+		transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 	}
 	.cta-links .button:hover {
 		background: var(--accent-dark);
+		transform: translateY(-2px);
+		box-shadow: 0 6px 16px rgba(35, 55, 255, 0.35);
 	}
 
 	.nav-right {
@@ -261,6 +272,11 @@ const programs = [
 			position: static;
 			box-shadow: none;
 			border: 1px solid rgba(var(--gray), 20%);
+			opacity: 1;
+			visibility: visible;
+			pointer-events: auto;
+			transform: none;
+			transition: none;
 		}
 	}
 </style>
