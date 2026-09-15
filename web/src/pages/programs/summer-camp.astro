@@ -1,0 +1,64 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+
+const title = 'Summer Camp';
+const description = 'A different musical theme every week, mid-June through early August.';
+
+const weeks = [
+	{ dates: 'June 16–20', theme: 'Summer' },
+	{ dates: 'June 23–27', theme: 'Camping (indoors)' },
+	{ dates: 'June 30–July 3', theme: 'Big Band Improvisation' },
+	{ dates: 'July 7–11', theme: 'Video Games and Music Technology' },
+	{ dates: 'July 14–18', theme: 'Genre Week' },
+	{ dates: 'July 21–25', theme: 'Cruise Around the World' },
+	{ dates: 'July 28–August 1', theme: 'Space' },
+	{ dates: 'August 4–8', theme: 'Music in the Cinema' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+	</head>
+	<body>
+		<Header />
+		<main class="content-page">
+			<h1>Summer Camp</h1>
+			<p class="lede">Students of all abilities are welcome to attend any and all sessions.</p>
+
+			<h2>Morning Sessions: $350</h2>
+			<p>Camp sessions run weekly from 8:30 a.m. to 12:30 p.m.</p>
+
+			<h2>Weekly Themes</h2>
+			<ul class="week-list">
+				{weeks.map((week) => <li><strong>{week.dates}:</strong> {week.theme}</li>)}
+			</ul>
+
+			<h2>Registration</h2>
+			<p>
+				To register, please contact Marisela Smith at:
+				<a href="mailto:opusconservatory@gmail.com">opusconservatory@gmail.com</a>,
+				<a href="tel:5712442852">571-244-2852</a>
+			</p>
+
+			<div class="button-row">
+				<a class="button" href="mailto:opusconservatory@gmail.com">Email to Register</a>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.week-list {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+		gap: 0.5rem 1.5rem;
+		list-style: disc;
+		padding-left: 1.25rem;
+		margin: 0 0 2rem;
+	}
+</style>

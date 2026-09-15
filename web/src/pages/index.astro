@@ -1,8 +1,56 @@
 ---
+import { defineQuery } from 'groq';
+import { sanityClient } from 'sanity:client';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const HOME_LOCATIONS_QUERY = defineQuery(
+	`*[_type == "location"] | order(name asc){ _id, name, slug, address, phone, hours }`
+);
+const locations = await sanityClient.fetch(HOME_LOCATIONS_QUERY).catch(() => []);
+
+const instruments = [
+	'Piano',
+	'Voice',
+	'Guitar',
+	'Violin',
+	'Cello',
+	'Flute',
+	'Clarinet',
+	'Percussion',
+	'Ukulele',
+	'Cuatro',
+];
+
+const programs = [
+	{
+		href: '/programs/private-lessons',
+		title: 'Private Lessons',
+		blurb: 'One-on-one instruction in 30, 45, or 60-minute sessions, matched to each student’s goals and pace.',
+	},
+	{
+		href: '/programs/adaptive-lessons',
+		title: 'Adaptive Lessons',
+		blurb: 'Instruction reshaped around each learner — instrument, environment, and pacing all adjust to fit.',
+	},
+	{
+		href: '/programs/music-therapy',
+		title: 'Music Therapy',
+		blurb: 'Board-certified music therapy sessions built around clinical goals, not performance skill.',
+	},
+	{
+		href: '/programs/summer-camp',
+		title: 'Summer Camp',
+		blurb: 'A different musical theme every week, from big-band improvisation to scoring for film.',
+	},
+	{
+		href: '/recitals',
+		title: 'Recitals',
+		blurb: 'Regular performance opportunities where students share what they’ve been working on.',
+	},
+];
 ---
 
 <!doctype html>
@@ -12,15 +60,245 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 	</head>
 	<body>
 		<Header />
-		<main>
-			<h1>Welcome to {SITE_TITLE}</h1>
-			<p>{SITE_DESCRIPTION}</p>
-			<ul>
-				<li><a href="/events">Upcoming Events</a></li>
-				<li><a href="/galleries">Galleries</a></li>
-				<li><a href="/instructors">Instructors</a></li>
-			</ul>
+		<main class="home">
+			<section class="hero">
+				<h1>Music lessons shaped around the student, not the other way around</h1>
+				<p class="lede">
+					Since 2008, Opus Conservatory has paired children and adults with instructors who meet
+					them where they are — across ten instruments, in two Virginia studios, with a free trial
+					lesson to start.
+				</p>
+				<div class="hero-actions">
+					<a class="button" href="/free-trial">Book a Free Trial</a>
+					<a class="button button-outline" href="/instructors">Meet the Instructors</a>
+				</div>
+			</section>
+
+			<section class="instruments">
+				<h2>Instruments we teach</h2>
+				<ul class="instrument-pills">
+					{instruments.map((instrument) => <li>{instrument}</li>)}
+				</ul>
+			</section>
+
+			<section class="programs">
+				<h2>Programs</h2>
+				<div class="program-grid">
+					{
+						programs.map((program) => (
+							<a class="program-card" href={program.href}>
+								<h3>{program.title}</h3>
+								<p>{program.blurb}</p>
+								<span class="learn-more">Learn more &rarr;</span>
+							</a>
+						))
+					}
+				</div>
+			</section>
+
+			<section class="locations">
+				<h2>Our studios</h2>
+				<div class="location-grid">
+					{
+						locations.length > 0 ? (
+							locations.map((loc) => (
+								<div class="location-card">
+									<h3>{loc.name}</h3>
+									{loc.address && <p class="detail">{loc.address}</p>}
+									{loc.phone && (
+										<p class="detail">
+											<a href={`tel:${loc.phone.replace(/[^\d+]/g, '')}`}>{loc.phone}</a>
+										</p>
+									)}
+									{loc.hours?.length > 0 && (
+										<ul class="hours">
+											{loc.hours.map((line) => <li>{line}</li>)}
+										</ul>
+									)}
+									<a class="learn-more" href={`/instructors?location=${loc.slug.current}`}>
+										See {loc.name} instructors &rarr;
+									</a>
+								</div>
+							))
+						) : (
+							<p>Studio locations are managed in Sanity — add a "Location" entry to show it here.</p>
+						)
+					}
+				</div>
+			</section>
+
+			<section class="cta-banner">
+				<h2>Ready to try a lesson?</h2>
+				<p>Your first lesson is on us — tell us your instrument and preferred studio, and we’ll pair you with an instructor.</p>
+				<a class="button" href="/free-trial">Book a Free Trial</a>
+			</section>
 		</main>
 		<Footer />
 	</body>
 </html>
+
+<style>
+	.home {
+		width: 100%;
+		max-width: 1080px;
+	}
+
+	section {
+		margin-bottom: 4rem;
+	}
+
+	.hero {
+		text-align: center;
+		padding: 2rem 0 1rem;
+	}
+	.hero h1 {
+		max-width: 780px;
+		margin: 0 auto 0.75rem;
+	}
+	.lede {
+		max-width: 640px;
+		margin: 0 auto 1.5rem;
+		font-size: 1.15rem;
+		color: rgb(var(--gray-dark));
+	}
+	.hero-actions {
+		display: flex;
+		gap: 1rem;
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+
+	.button {
+		display: inline-block;
+		padding: 0.75em 1.5em;
+		border-radius: 999px;
+		background: var(--accent);
+		color: white;
+		font-weight: 700;
+		text-decoration: none;
+	}
+	.button:hover {
+		background: var(--accent-dark);
+		color: white;
+	}
+	.button-outline {
+		background: transparent;
+		color: var(--accent);
+		border: 2px solid var(--accent);
+	}
+	.button-outline:hover {
+		background: var(--accent);
+		color: white;
+	}
+
+	h2 {
+		text-align: center;
+		margin-bottom: 1.5rem;
+	}
+
+	.instrument-pills {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+		justify-content: center;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.instrument-pills li {
+		padding: 0.5em 1.1em;
+		border-radius: 999px;
+		background: white;
+		border: 1px solid rgba(var(--gray), 20%);
+		font-weight: 600;
+	}
+
+	.program-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+		gap: 1.25rem;
+	}
+	.program-card {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		padding: 1.5rem;
+		border-radius: 14px;
+		background: white;
+		box-shadow: 0 2px 8px rgba(var(--black), 4%);
+		text-decoration: none;
+		color: inherit;
+		transition: box-shadow 0.2s ease, transform 0.2s ease;
+	}
+	.program-card:hover {
+		box-shadow: 0 8px 20px rgba(var(--black), 8%);
+		transform: translateY(-2px);
+	}
+	.program-card h3 {
+		margin: 0;
+		color: var(--black);
+	}
+	.program-card p {
+		margin: 0;
+		font-size: 0.95rem;
+		color: rgb(var(--gray));
+		flex-grow: 1;
+	}
+	.learn-more {
+		font-weight: 700;
+		color: var(--accent);
+		text-decoration: none;
+	}
+
+	.location-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+		gap: 1.25rem;
+	}
+	.location-card {
+		padding: 1.5rem;
+		border-radius: 14px;
+		background: white;
+		box-shadow: 0 2px 8px rgba(var(--black), 4%);
+	}
+	.location-card h3 {
+		margin-top: 0;
+	}
+	.location-card .detail {
+		margin: 0.25rem 0;
+		color: rgb(var(--gray-dark));
+	}
+	.hours {
+		list-style: none;
+		margin: 0.75rem 0;
+		padding: 0;
+		font-size: 0.9rem;
+		color: rgb(var(--gray));
+	}
+	.hours li {
+		margin-bottom: 0.15rem;
+	}
+
+	.cta-banner {
+		text-align: center;
+		padding: 3rem 2rem;
+		border-radius: 20px;
+		background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+		color: white;
+	}
+	.cta-banner h2 {
+		color: white;
+	}
+	.cta-banner p {
+		max-width: 520px;
+		margin: 0 auto 1.5rem;
+	}
+	.cta-banner .button {
+		background: white;
+		color: var(--accent-dark);
+	}
+	.cta-banner .button:hover {
+		background: rgb(var(--gray-light));
+		color: var(--accent-dark);
+	}
+</style>

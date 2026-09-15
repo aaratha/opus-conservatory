@@ -1,0 +1,82 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+
+const title = 'Private Lessons';
+const description = 'One-on-one music lessons across ten instruments, in 30, 45, or 60-minute sessions.';
+
+const instruments = [
+	'Piano',
+	'Voice',
+	'Guitar',
+	'Violin',
+	'Cello',
+	'Flute',
+	'Clarinet',
+	'Percussion',
+	'Ukulele',
+	'Cuatro',
+];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+	</head>
+	<body>
+		<Header />
+		<main class="content-page">
+			<h1>Private Lessons</h1>
+			<p class="lede">
+				Every student gets one-on-one time with an instructor who adjusts the pace, repertoire, and
+				teaching style to fit them — not a fixed curriculum everyone moves through at the same
+				speed.
+			</p>
+
+			<h2>How lessons are structured</h2>
+			<p>
+				Lessons run in 30, 45, or 60-minute sessions, scheduled weekly at one of our two studios.
+				Younger or newer students often start at 30 minutes; more advanced students preparing for
+				exams or performances tend to move to longer sessions. Instruction follows the Royal
+				Conservatory Music Development Program, giving students a clear sense of progress from one
+				level to the next.
+			</p>
+
+			<h2>Instruments</h2>
+			<ul class="instrument-list">
+				{instruments.map((instrument) => <li>{instrument}</li>)}
+			</ul>
+
+			<p>
+				Not sure which instrument or instructor is the right fit? A complimentary trial lesson is
+				the easiest way to find out.
+			</p>
+
+			<div class="button-row">
+				<a class="button" href="/free-trial">Book a Free Trial</a>
+				<a class="button button-outline" href="/instructors">Meet the Instructors</a>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.instrument-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+		list-style: none;
+		margin: 0 0 2rem;
+		padding: 0;
+	}
+	.instrument-list li {
+		padding: 0.5em 1.1em;
+		border-radius: 999px;
+		background: white;
+		border: 1px solid rgba(var(--gray), 20%);
+		font-weight: 600;
+	}
+</style>

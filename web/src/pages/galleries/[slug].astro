@@ -30,12 +30,12 @@ if (!gallery) throw new Error(`Gallery not found: ${slug}`);
 	</head>
 	<body>
 		<Header />
-		<main>
+		<main class="content-page">
 			<h1>{gallery.title}</h1>
 			<div class="grid">
 				{
 					gallery.images?.map((image) => (
-						<figure>
+						<figure class="card">
 							<img src={urlFor(image).width(600).url()} alt={image.alt ?? ''} />
 							{image.caption && <figcaption>{image.caption}</figcaption>}
 						</figure>
@@ -46,3 +46,25 @@ if (!gallery) throw new Error(`Gallery not found: ${slug}`);
 		<Footer />
 	</body>
 </html>
+
+<style>
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+		gap: 1.25rem;
+	}
+	figure.card {
+		margin: 0;
+		padding: 0.75rem;
+	}
+	figure img {
+		display: block;
+		border-radius: 10px;
+		width: 100%;
+	}
+	figcaption {
+		margin-top: 0.5rem;
+		font-size: 0.9rem;
+		color: rgb(var(--gray));
+	}
+</style>

@@ -13,6 +13,17 @@ export const instructor = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'title',
+      title: 'Role / title',
+      type: 'string',
+      description: 'e.g. "Founder & Director", "Richmond Studio Director"',
+    }),
+    defineField({
+      name: 'locations',
+      type: 'array',
+      of: [defineArrayMember({type: 'reference', to: [{type: 'location'}]})],
+    }),
+    defineField({
       name: 'photo',
       type: 'image',
       options: {hotspot: true},

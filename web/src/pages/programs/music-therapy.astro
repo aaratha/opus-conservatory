@@ -1,0 +1,57 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+
+const title = 'Music Therapy';
+const description = 'Board-certified music therapy sessions for clients of all ages and ability levels.';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+	</head>
+	<body>
+		<Header />
+		<main class="content-page">
+			<h1>Music Therapy</h1>
+			<p class="lede">
+				Music therapy uses music as a clinical tool, not a performance goal — sessions are guided by
+				a board-certified therapist and built around each client's own developmental, emotional, or
+				physical goals.
+			</p>
+
+			<h2>Who it's for</h2>
+			<p>
+				Clients of any age or ability level are welcome, with no diagnosis required to start.
+				Common goals we work toward include support for autism, developmental delays, speech and
+				language needs, motor skill challenges, pain management, and emotional or behavioral
+				concerns.
+			</p>
+
+			<h2>How sessions work</h2>
+			<p>
+				Every treatment plan is individualized and built together with the client, family, and
+				caregivers. Sessions draw on music the client already responds to, along with adaptive
+				instruments and sensory supports suited to that person.
+			</p>
+
+			<h2>Who leads sessions</h2>
+			<p>
+				Our music therapy practice is led by Emily Perry, MT-BC, a board-certified music therapist.
+			</p>
+
+			<p>
+				Both studios are ADA-compliant, with wheelchair access, wide doorways, single-floor
+				classrooms, and accessible restrooms.
+			</p>
+
+			<div class="button-row">
+				<a class="button" href="/free-trial">Ask About a Session</a>
+				<a class="button button-outline" href="/programs/adaptive-lessons">See Adaptive Lessons</a>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>

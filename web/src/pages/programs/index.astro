@@ -1,0 +1,91 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+
+const title = 'Programs';
+const description = 'Private lessons, adaptive lessons, music therapy, summer camp, and recitals at Opus Conservatory.';
+
+const programs = [
+	{
+		href: '/programs/private-lessons',
+		title: 'Private Lessons',
+		blurb: 'One-on-one instruction across ten instruments, in 30, 45, or 60-minute sessions.',
+	},
+	{
+		href: '/programs/adaptive-lessons',
+		title: 'Adaptive Lessons',
+		blurb: 'Music instruction reshaped for students with disabilities, medical conditions, or learning differences.',
+	},
+	{
+		href: '/programs/music-therapy',
+		title: 'Music Therapy',
+		blurb: 'Clinical, goal-driven sessions led by a board-certified music therapist.',
+	},
+	{
+		href: '/programs/summer-camp',
+		title: 'Summer Camp',
+		blurb: 'A new musical theme each week, from big-band improvisation to scoring for film.',
+	},
+	{
+		href: '/recitals',
+		title: 'Recitals',
+		blurb: 'Twice-yearly performance opportunities for students at every level.',
+	},
+];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<div class="page-hero">
+				<h1>Programs</h1>
+				<p class="lede">
+					Whatever brought a student to us — curiosity, a recital goal, or a specific developmental
+					need — there's a program built around it.
+				</p>
+			</div>
+			<div class="fact-grid">
+				{
+					programs.map((program) => (
+						<a class="card program-card" href={program.href}>
+							<h3>{program.title}</h3>
+							<p>{program.blurb}</p>
+							<span class="learn-more">Learn more &rarr;</span>
+						</a>
+					))
+				}
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.program-card {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		text-decoration: none;
+		color: inherit;
+		transition: box-shadow 0.2s ease, transform 0.2s ease;
+	}
+	.program-card:hover {
+		box-shadow: 0 8px 20px rgba(var(--black), 8%);
+		transform: translateY(-2px);
+	}
+	.program-card p {
+		margin: 0;
+		flex-grow: 1;
+		color: rgb(var(--gray));
+	}
+	.learn-more {
+		font-weight: 700;
+		color: var(--accent);
+	}
+</style>

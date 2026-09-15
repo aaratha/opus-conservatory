@@ -1,0 +1,43 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+
+const title = 'Recitals';
+const description = 'Twice-yearly student recitals showcasing performances across every instrument we teach.';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+	</head>
+	<body>
+		<Header />
+		<main class="content-page">
+			<h1>Recitals</h1>
+			<p class="lede">
+				Recitals give students a real stage to perform what they've been practicing — solo pieces,
+				duets, and group accompaniments across piano, voice, guitar, violin, flute, and more.
+			</p>
+
+			<p>
+				We hold recitals twice a year, in spring and fall, at the Loudoun studio, split across
+				several short sessions so every student's family has room to attend comfortably.
+				Graduating seniors are recognized as part of the program, and the repertoire spans classical
+				pieces, contemporary songs, and film music.
+			</p>
+
+			<p>
+				Looking for photos from past performances? Browse our <a href="/galleries">galleries</a>, or
+				check <a href="/events">upcoming events</a> for the next recital date.
+			</p>
+
+			<div class="button-row">
+				<a class="button" href="/galleries">View Past Recital Photos</a>
+				<a class="button button-outline" href="/events">See Upcoming Events</a>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>

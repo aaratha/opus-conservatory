@@ -18,7 +18,8 @@ export async function getStaticPaths() {
 const EVENT_QUERY = defineQuery(
 	`*[_type == "event" && slug.current == $slug][0]{
 		title, startDateTime, endDateTime, location, coverImage, description,
-		instructors[]->{ _id, name }
+		instructors[]->{ _id, name },
+		gallery->{ _id, "slug": slug.current }
 	}`
 );
 
@@ -35,15 +36,15 @@ if (!event) throw new Error(`Event not found: ${slug}`);
 	</head>
 	<body>
 		<Header />
-		<main>
+		<main class="content-page">
 			<article>
-				{event.coverImage && <img src={urlFor(event.coverImage).width(1000).url()} alt="" />}
+				{event.coverImage && <img src={urlFor(event.coverImage).width(1000).url()} alt="" class="cover" />}
 				<h1>{event.title}</h1>
-				<p>
+				<p class="event-meta">
 					<FormattedDate date={new Date(event.startDateTime)} />
 					{event.endDateTime && <> – <FormattedDate date={new Date(event.endDateTime)} /></>}
+					{event.location && <> · {event.location}</>}
 				</p>
-				{event.location && <p>{event.location}</p>}
 				{event.description && <PortableText value={event.description} />}
 				{
 					event.instructors && event.instructors.length > 0 && (
@@ -58,8 +59,26 @@ if (!event) throw new Error(`Event not found: ${slug}`);
 						</p>
 					)
 				}
+				{
+					event.gallery && (
+						<a class="button" href={`/galleries/${event.gallery.slug}/`}>
+							View Photo Gallery
+						</a>
+					)
+				}
 			</article>
 		</main>
 		<Footer />
 	</body>
 </html>
+
+<style>
+	.cover {
+		border-radius: 12px;
+		margin-bottom: 1.5rem;
+	}
+	.event-meta {
+		color: rgb(var(--gray));
+		font-weight: 600;
+	}
+</style>

@@ -56,6 +56,11 @@ export const event = defineType({
       type: 'array',
       of: [defineArrayMember({type: 'reference', to: [{type: 'instructor'}]})],
     }),
+    defineField({
+      name: 'gallery',
+      type: 'reference',
+      to: [{type: 'gallery'}],
+    }),
   ],
   preview: {
     select: {

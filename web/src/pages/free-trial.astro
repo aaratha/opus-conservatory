@@ -1,0 +1,116 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+
+const title = 'Free Trial Lesson';
+const description = 'Book a complimentary trial lesson and get matched with the right instructor.';
+
+const instruments = [
+	'Piano',
+	'Flute',
+	'Voice',
+	'Violin',
+	'Guitar',
+	'Saxophone',
+	'Percussion',
+	'Ukulele',
+	'Cello',
+	'Clarinet',
+	'Cuatro',
+];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+	</head>
+	<body>
+		<Header />
+		<main class="content-page">
+			<h1>Book a Free Trial Lesson</h1>
+			<p class="lede">
+				One complimentary lesson, with no obligation, so we can pair a new student with the right
+				instructor before any commitment.
+			</p>
+
+			<form class="trial-form" name="free-trial">
+				<div class="form-row">
+					<label>
+						First name
+						<input type="text" name="firstName" required />
+					</label>
+					<label>
+						Last name
+						<input type="text" name="lastName" required />
+					</label>
+				</div>
+				<label>
+					Email
+					<input type="email" name="email" required />
+				</label>
+				<label>
+					Preferred location
+					<select name="location" required>
+						<option value="loudoun">Loudoun</option>
+						<option value="richmond">Richmond</option>
+					</select>
+				</label>
+				<label>
+					Instrument
+					<select name="instrument" required>
+						{instruments.map((instrument) => <option value={instrument.toLowerCase()}>{instrument}</option>)}
+					</select>
+				</label>
+				<label>
+					Message
+					<textarea name="message" rows="4" placeholder="Best phone number and anything else we should know"
+					></textarea>
+				</label>
+				<button class="button" type="submit">Request Trial Lesson</button>
+			</form>
+
+			<p class="fallback">
+				Prefer to call or email? Reach the Loudoun studio at
+				<a href="tel:5712442852">(571) 244-2852</a> or the Richmond studio at
+				<a href="tel:5717307906">(571) 730-7906</a>.
+			</p>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.trial-form {
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+		max-width: 480px;
+		margin: 2rem 0;
+	}
+	.form-row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1.25rem;
+	}
+	label {
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+		font-weight: 600;
+		font-size: 0.95rem;
+	}
+	input,
+	select,
+	textarea {
+		padding: 0.6em 0.75em;
+		border-radius: 8px;
+		border: 1px solid rgba(var(--gray), 30%);
+		font-family: inherit;
+	}
+	.fallback {
+		font-size: 0.95rem;
+		color: rgb(var(--gray));
+	}
+</style>

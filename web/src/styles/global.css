@@ -122,6 +122,66 @@ hr {
 	}
 }
 
+.button {
+	display: inline-block;
+	padding: 0.75em 1.5em;
+	border-radius: 999px;
+	background: var(--accent);
+	color: white;
+	font-weight: 700;
+	text-decoration: none;
+	border: 2px solid var(--accent);
+}
+.button:hover {
+	background: var(--accent-dark);
+	border-color: var(--accent-dark);
+	color: white;
+}
+.button-outline {
+	background: transparent;
+	color: var(--accent);
+}
+.button-outline:hover {
+	background: var(--accent);
+	color: white;
+}
+.button-row {
+	display: flex;
+	gap: 1rem;
+	flex-wrap: wrap;
+}
+
+.card {
+	padding: 1.5rem;
+	border-radius: 14px;
+	background: white;
+	box-shadow: 0 2px 8px rgba(var(--black), 4%);
+}
+
+.page-hero {
+	max-width: 720px;
+	margin: 0 auto 2.5rem;
+	text-align: center;
+}
+.page-hero .lede {
+	font-size: 1.15rem;
+	color: rgb(var(--gray-dark));
+}
+
+.content-page {
+	max-width: 780px;
+}
+
+.fact-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 1.25rem;
+	margin: 2rem 0;
+}
+.fact-grid .card h3 {
+	margin-top: 0;
+}
+
 .sr-only {
 	border: 0;
 	padding: 0;

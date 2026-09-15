@@ -11,29 +11,83 @@ const EVENTS_QUERY = defineQuery(
 );
 
 const events = await sanityClient.fetch(EVENTS_QUERY);
+const now = new Date();
+const upcoming = events.filter((event) => new Date(event.startDateTime) >= now);
+const past = events.filter((event) => new Date(event.startDateTime) < now).reverse();
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title="Events" description="Upcoming events" />
+		<BaseHead title="Events" description="Upcoming and past events at Opus Conservatory" />
 	</head>
 	<body>
 		<Header />
-		<main>
+		<main class="content-page">
 			<h1>Events</h1>
-			<ul>
+
+			<h2>Upcoming</h2>
+			{upcoming.length === 0 && <p class="empty">No upcoming events scheduled yet — check back soon.</p>}
+			<ul class="event-list">
 				{
-					events.map((event) => (
-						<li>
+					upcoming.map((event) => (
+						<li class="card event-card">
 							<a href={`/events/${event.slug.current}/`}>{event.title}</a>
-							<FormattedDate date={new Date(event.startDateTime)} />
-							{event.location && <span> — {event.location}</span>}
+							<div class="event-meta">
+								<FormattedDate date={new Date(event.startDateTime)} />
+								{event.location && <span> · {event.location}</span>}
+							</div>
 						</li>
 					))
 				}
 			</ul>
+
+			{
+				past.length > 0 && (
+					<>
+						<h2>Past Events</h2>
+						<ul class="event-list">
+							{past.map((event) => (
+								<li class="card event-card">
+									<a href={`/events/${event.slug.current}/`}>{event.title}</a>
+									<div class="event-meta">
+										<FormattedDate date={new Date(event.startDateTime)} />
+										{event.location && <span> · {event.location}</span>}
+									</div>
+								</li>
+							))}
+						</ul>
+					</>
+				)
+			}
 		</main>
 		<Footer />
 	</body>
 </html>
+
+<style>
+	.empty {
+		color: rgb(var(--gray));
+	}
+	.event-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		list-style: none;
+		margin: 0 0 2rem;
+		padding: 0;
+	}
+	.event-card {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+	.event-card a {
+		font-weight: 700;
+		font-size: 1.1rem;
+	}
+	.event-meta {
+		font-size: 0.9rem;
+		color: rgb(var(--gray));
+	}
+</style>

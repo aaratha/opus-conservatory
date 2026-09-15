@@ -1,0 +1,61 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+
+const title = 'Adaptive Lessons';
+const description = 'Individualized music instruction for students with disabilities, medical conditions, or learning differences.';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+	</head>
+	<body>
+		<Header />
+		<main class="content-page">
+			<h1>Adaptive Lessons</h1>
+			<p class="lede">
+				For students with learning differences, disabilities, or medical conditions, we rebuild the
+				lesson around the student — the instrument, the environment, the pacing, and the teaching
+				method all flex to fit.
+			</p>
+
+			<h2>What changes</h2>
+			<p>
+				Instructors adjust instruction speed, expectations, and structure on a student-by-student
+				basis — adding breaks, modifying instruments, and drawing on sensory-friendly strategies
+				where needed. The goal extends past playing an instrument: sessions are also designed to
+				build attention, memory, perception, cognitive flexibility, and emotional expression.
+			</p>
+
+			<h2>Who leads these lessons</h2>
+			<p>
+				Adaptive lessons are taught by board-certified music therapists trained to work across a
+				wide range of disabilities and health needs, so instruction stays personalized rather than
+				one-size-fits-all.
+			</p>
+
+			<h2>Areas of study</h2>
+			<ul>
+				<li>Piano</li>
+				<li>Guitar</li>
+				<li>Voice</li>
+				<li>Hand percussion</li>
+				<li>Music theory, composition, and improvisation</li>
+			</ul>
+
+			<p>
+				Both studios are single-floor and wheelchair accessible, with wide doorways and accessible
+				restrooms.
+			</p>
+
+			<div class="button-row">
+				<a class="button" href="/free-trial">Book a Free Trial</a>
+				<a class="button button-outline" href="/programs/music-therapy">See Music Therapy</a>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>

@@ -1,6 +1,21 @@
 ---
+import { defineQuery } from 'groq';
+import { sanityClient } from 'sanity:client';
 import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
+
+const HEADER_LOCATIONS_QUERY = defineQuery(
+	`*[_type == "location"] | order(name asc){ _id, name, slug, address, phone }`
+);
+const locations = await sanityClient.fetch(HEADER_LOCATIONS_QUERY).catch(() => []);
+
+const programs = [
+	{ href: '/programs/private-lessons', label: 'Private Lessons' },
+	{ href: '/programs/adaptive-lessons', label: 'Adaptive Lessons' },
+	{ href: '/programs/music-therapy', label: 'Music Therapy' },
+	{ href: '/programs/summer-camp', label: 'Summer Camp' },
+	{ href: '/recitals', label: 'Recitals' },
+];
 ---
 
 <header>
@@ -8,15 +23,51 @@ import HeaderLink from './HeaderLink.astro';
 		<h2><a href="/">{SITE_TITLE}</a></h2>
 		<div class="internal-links">
 			<HeaderLink href="/">Home</HeaderLink>
+
+			<div class="dropdown">
+				<a class="dropdown-trigger" href="/programs" aria-haspopup="true">
+					Programs <span class="caret" aria-hidden="true">▾</span>
+				</a>
+				<div class="dropdown-menu">
+					{
+						programs.map((program) => (
+							<a class="dropdown-item" href={program.href}>
+								{program.label}
+							</a>
+						))
+					}
+				</div>
+			</div>
+
+			<div class="dropdown">
+				<a class="dropdown-trigger" href="/instructors" aria-haspopup="true">
+					Instructors <span class="caret" aria-hidden="true">▾</span>
+				</a>
+				<div class="dropdown-menu">
+					{
+						locations.map((loc) => (
+							<a class="dropdown-item location-item" href={`/instructors?location=${loc.slug.current}`}>
+								<span class="location-name">{loc.name}</span>
+								{loc.address && <span class="location-detail">{loc.address}</span>}
+								{loc.phone && <span class="location-detail">{loc.phone}</span>}
+							</a>
+						))
+					}
+					<a class="dropdown-item dropdown-item-all" href="/instructors">All Instructors</a>
+				</div>
+			</div>
+
 			<HeaderLink href="/events">Events</HeaderLink>
 			<HeaderLink href="/galleries">Galleries</HeaderLink>
-			<HeaderLink href="/instructors">Instructors</HeaderLink>
 			<HeaderLink href="/about">About</HeaderLink>
+		</div>
+		<div class="cta-links">
+			<a class="button" href="/free-trial">Free Trial</a>
 		</div>
 		<div class="social-links">
 			<a href="https://www.instagram.com/opus.conservatory" target="_blank">
 				<span class="sr-only">Follow Opus Conservatory on Instagram</span>
-				<svg viewBox="0 0 24 24" aria-hidden="true" width="32" height="32"
+				<svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"
 					><path
 						fill="currentColor"
 						d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227a3.81 3.81 0 0 1-.899 1.382 3.744 3.744 0 0 1-1.38.896c-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421a3.716 3.716 0 0 1-1.379-.899 3.644 3.644 0 0 1-.9-1.38c-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.42-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm7.846-10.405a1.441 1.441 0 1 1-2.883 0 1.441 1.441 0 0 1 2.883 0z"
@@ -25,7 +76,7 @@ import HeaderLink from './HeaderLink.astro';
 			</a>
 			<a href="https://www.facebook.com/opusmusicconservatory" target="_blank">
 				<span class="sr-only">Follow Opus Conservatory on Facebook</span>
-				<svg viewBox="0 0 24 24" aria-hidden="true" width="32" height="32"
+				<svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"
 					><path
 						fill="currentColor"
 						d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.732-.009c-.918 0-1.598.245-2.038.732-.44.488-.66 1.232-.66 2.226v1.02h3.887l-.516 3.667h-3.371v7.98H9.101z"
@@ -41,6 +92,8 @@ import HeaderLink from './HeaderLink.astro';
 		padding: 0 1em;
 		background: white;
 		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+		position: relative;
+		z-index: 10;
 	}
 	h2 {
 		margin: 0;
@@ -55,24 +108,134 @@ import HeaderLink from './HeaderLink.astro';
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		gap: 1em;
 	}
-	nav a {
+	.internal-links {
+		display: flex;
+		align-items: center;
+	}
+	nav > .internal-links > :global(a) {
 		padding: 1em 0.5em;
 		color: var(--black);
 		border-bottom: 4px solid transparent;
 		text-decoration: none;
 	}
-	nav a.active {
+	nav :global(a.active) {
 		text-decoration: none;
 		border-bottom-color: var(--accent);
 	}
+
+	.dropdown {
+		position: relative;
+	}
+	.dropdown-trigger {
+		display: flex;
+		align-items: center;
+		gap: 0.3em;
+		padding: 1em 0.5em;
+		background: none;
+		border: none;
+		border-bottom: 4px solid transparent;
+		font: inherit;
+		font-size: 1em;
+		color: var(--black);
+		text-decoration: none;
+		cursor: pointer;
+	}
+	.caret {
+		font-size: 0.7em;
+		color: rgb(var(--gray));
+	}
+	.dropdown-menu {
+		display: none;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		min-width: 220px;
+		background: white;
+		border-radius: 10px;
+		box-shadow: var(--box-shadow);
+		padding: 0.5em;
+		flex-direction: column;
+	}
+	.dropdown:hover .dropdown-menu,
+	.dropdown:focus-within .dropdown-menu {
+		display: flex;
+	}
+	.dropdown:hover .dropdown-trigger,
+	.dropdown:focus-within .dropdown-trigger {
+		border-bottom-color: var(--accent);
+	}
+	.dropdown-item {
+		display: flex;
+		flex-direction: column;
+		padding: 0.6em 0.75em;
+		border-radius: 6px;
+		text-decoration: none;
+		color: var(--black);
+		font-size: 0.95rem;
+	}
+	.dropdown-item:hover {
+		background: rgb(var(--gray-light));
+	}
+	.location-name {
+		font-weight: 700;
+	}
+	.location-detail {
+		font-size: 0.85em;
+		color: rgb(var(--gray));
+	}
+	.dropdown-item-all {
+		margin-top: 0.25em;
+		border-top: 1px solid rgba(var(--gray), 20%);
+		padding-top: 0.6em;
+		font-weight: 600;
+		color: var(--accent);
+	}
+
+	.cta-links .button {
+		display: inline-block;
+		padding: 0.6em 1.25em;
+		border-radius: 999px;
+		background: var(--accent);
+		color: white;
+		font-weight: 700;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+	.cta-links .button:hover {
+		background: var(--accent-dark);
+	}
+
 	.social-links,
 	.social-links a {
 		display: flex;
 	}
-	@media (max-width: 720px) {
+	.social-links {
+		gap: 0.75em;
+	}
+	.social-links a {
+		color: var(--black);
+	}
+	@media (max-width: 960px) {
 		.social-links {
 			display: none;
+		}
+	}
+	@media (max-width: 720px) {
+		nav {
+			flex-wrap: wrap;
+			padding: 0.5em 0;
+		}
+		.internal-links {
+			order: 3;
+			width: 100%;
+			flex-wrap: wrap;
+		}
+		.dropdown-menu {
+			position: static;
+			box-shadow: none;
+			border: 1px solid rgba(var(--gray), 20%);
 		}
 	}
 </style>

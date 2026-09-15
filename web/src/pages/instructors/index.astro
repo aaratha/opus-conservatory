@@ -8,21 +8,74 @@ import Header from '../../components/Header.astro';
 import { urlFor } from '../../lib/sanity';
 
 const INSTRUCTORS_QUERY = defineQuery(
-	`*[_type == "instructor"] | order(name asc){ _id, name, photo, instruments, bio, email }`
+	`*[_type == "instructor"] | order(name asc){ _id, name, title, photo, instruments, bio, email, locations[]->{ _id, name, slug } }`
+);
+const INSTRUCTORS_PAGE_LOCATIONS_QUERY = defineQuery(
+	`*[_type == "location"] | order(name asc){ _id, name, slug, address, phone, hours }`
 );
 
-const instructors = await sanityClient.fetch(INSTRUCTORS_QUERY);
+const [allInstructors, locations] = await Promise.all([
+	sanityClient.fetch(INSTRUCTORS_QUERY),
+	sanityClient.fetch(INSTRUCTORS_PAGE_LOCATIONS_QUERY).catch(() => []),
+]);
+
+const requestedSlug = Astro.url.searchParams.get('location');
+const activeLocation = requestedSlug
+	? locations.find((loc) => loc.slug.current === requestedSlug)
+	: null;
+
+const instructors = activeLocation
+	? allInstructors.filter((instructor) =>
+			instructor.locations?.some((loc) => loc.slug.current === requestedSlug)
+		)
+	: allInstructors;
+
+const title = activeLocation ? `${activeLocation.name} Instructors` : 'Instructors';
+const description = activeLocation
+	? `Meet the instructors teaching at our ${activeLocation.name} studio.`
+	: 'Meet our instructors';
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title="Instructors" description="Meet our instructors" />
+		<BaseHead title={title} description={description} />
 	</head>
 	<body>
 		<Header />
 		<main>
-			<h1>Instructors</h1>
+			<h1>{title}</h1>
+
+			<div class="location-filters">
+				<a class:list={['filter-pill', { active: !activeLocation }]} href="/instructors">All</a>
+				{
+					locations.map((loc) => (
+						<a
+							class:list={['filter-pill', { active: activeLocation?._id === loc._id }]}
+							href={`/instructors?location=${loc.slug.current}`}
+						>
+							{loc.name}
+						</a>
+					))
+				}
+			</div>
+
+			{
+				activeLocation && (
+					<div class="location-banner">
+						{activeLocation.address && <span>{activeLocation.address}</span>}
+						{activeLocation.phone && (
+							<span>
+								<a href={`tel:${activeLocation.phone.replace(/[^\d+]/g, '')}`}>
+									{activeLocation.phone}
+								</a>
+							</span>
+						)}
+						{activeLocation.hours?.map((line) => <span>{line}</span>)}
+					</div>
+				)
+			}
+
 			<ul class="instructors">
 				{
 					instructors.map((instructor) => (
@@ -41,8 +94,14 @@ const instructors = await sanityClient.fetch(INSTRUCTORS_QUERY);
 								)}
 								<div class="instructor-info">
 									<h2>{instructor.name}</h2>
+									{instructor.title && <p class="role">{instructor.title}</p>}
 									{instructor.instruments && (
 										<p class="instruments">{instructor.instruments.join(', ')}</p>
+									)}
+									{instructor.locations?.length > 0 && (
+										<p class="instructor-locations">
+											{instructor.locations.map((loc) => loc.name).join(' · ')}
+										</p>
 									)}
 								</div>
 							</div>
@@ -63,6 +122,8 @@ const instructors = await sanityClient.fetch(INSTRUCTORS_QUERY);
 					))
 				}
 			</ul>
+
+			{instructors.length === 0 && <p>No instructors found for this location yet.</p>}
 		</main>
 		<Footer />
 	</body>
@@ -71,6 +132,38 @@ const instructors = await sanityClient.fetch(INSTRUCTORS_QUERY);
 <style>
 	main {
 		max-width: 960px;
+	}
+
+	.location-filters {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+		margin: 1rem 0 1.5rem;
+	}
+	.filter-pill {
+		padding: 0.4em 1em;
+		border-radius: 999px;
+		border: 1px solid rgba(var(--gray), 30%);
+		text-decoration: none;
+		color: var(--black);
+		font-weight: 600;
+		font-size: 0.9rem;
+	}
+	.filter-pill.active {
+		background: var(--accent);
+		border-color: var(--accent);
+		color: white;
+	}
+
+	.location-banner {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem 1.25rem;
+		margin-bottom: 1.5rem;
+		padding: 0.85rem 1.1rem;
+		border-radius: 10px;
+		background: rgb(var(--gray-light));
+		font-size: 0.9rem;
 	}
 
 	.instructors {
@@ -121,9 +214,22 @@ const instructors = await sanityClient.fetch(INSTRUCTORS_QUERY);
 		line-height: 1.3;
 	}
 
+	.instructor-info .role {
+		margin: 0.15rem 0 0;
+		font-size: 0.95rem;
+		font-weight: 600;
+		color: var(--accent);
+	}
+
 	.instructors .instruments {
 		margin: 0.5rem 0 0;
 		font-size: 1.2rem;
+		color: rgb(var(--gray));
+	}
+
+	.instructor-locations {
+		margin: 0.35rem 0 0;
+		font-size: 0.85rem;
 		color: rgb(var(--gray));
 	}
 

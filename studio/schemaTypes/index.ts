@@ -1,5 +1,6 @@
 import {event} from './event'
 import {gallery} from './gallery'
 import {instructor} from './instructor'
+import {location} from './location'
 
-export const schemaTypes = [instructor, event, gallery]
+export const schemaTypes = [location, instructor, event, gallery]

@@ -22,53 +22,18 @@ export type SanityImageAssetReference = {
   [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
 };
 
-export type Gallery = {
-  _id: string;
-  _type: "gallery";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title: string;
-  slug: Slug;
-  images?: Array<{
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt: string;
-    caption?: string;
-    _type: "image";
-    _key: string;
-  }>;
-};
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top: number;
-  bottom: number;
-  left: number;
-  right: number;
-};
-
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x: number;
-  y: number;
-  height: number;
-  width: number;
-};
-
-export type Slug = {
-  _type: "slug";
-  current: string;
-  source?: string;
-};
-
 export type InstructorReference = {
   _ref: string;
   _type: "reference";
   _weak?: boolean;
   [internalGroqTypeReferenceTo]?: "instructor";
+};
+
+export type GalleryReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "gallery";
 };
 
 export type Event = {
@@ -112,6 +77,56 @@ export type Event = {
       _key: string;
     } & InstructorReference
   >;
+  gallery?: GalleryReference;
+};
+
+export type Gallery = {
+  _id: string;
+  _type: "gallery";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  slug: Slug;
+  images?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    caption?: string;
+    _type: "image";
+    _key: string;
+  }>;
+};
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+};
+
+export type Slug = {
+  _type: "slug";
+  current: string;
+  source?: string;
+};
+
+export type LocationReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "location";
 };
 
 export type Instructor = {
@@ -121,6 +136,12 @@ export type Instructor = {
   _updatedAt: string;
   _rev: string;
   name: string;
+  title?: string;
+  locations?: Array<
+    {
+      _key: string;
+    } & LocationReference
+  >;
   photo?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -148,6 +169,27 @@ export type Instructor = {
     _key: string;
   }>;
   email?: string;
+};
+
+export type Location = {
+  _id: string;
+  _type: "location";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name: string;
+  slug: Slug;
+  address?: string;
+  phone?: string;
+  hours?: Array<string>;
+  image?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  blurb?: string;
 };
 
 export type SanityImagePaletteSwatch = {
@@ -249,13 +291,16 @@ export type Geopoint = {
 
 export type AllSanitySchemaTypes =
   | SanityImageAssetReference
+  | InstructorReference
+  | GalleryReference
+  | Event
   | Gallery
   | SanityImageCrop
   | SanityImageHotspot
   | Slug
-  | InstructorReference
-  | Event
+  | LocationReference
   | Instructor
+  | Location
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
@@ -264,6 +309,28 @@ export type AllSanitySchemaTypes =
   | SanityAssetSourceData
   | SanityImageAsset
   | Geopoint;
+
+// Source: ../web/src/components/Footer.astro
+// Variable: FOOTER_LOCATIONS_QUERY
+// Query: *[_type == "location"] | order(name asc){ _id, name, slug, address, phone }
+export type FOOTER_LOCATIONS_QUERY_RESULT = Array<{
+  _id: string;
+  name: string;
+  slug: Slug;
+  address: string | null;
+  phone: string | null;
+}>;
+
+// Source: ../web/src/components/Header.astro
+// Variable: HEADER_LOCATIONS_QUERY
+// Query: *[_type == "location"] | order(name asc){ _id, name, slug, address, phone }
+export type HEADER_LOCATIONS_QUERY_RESULT = Array<{
+  _id: string;
+  name: string;
+  slug: Slug;
+  address: string | null;
+  phone: string | null;
+}>;
 
 // Source: ../web/src/pages/events/[slug].astro
 // Variable: EVENT_SLUGS_QUERY
@@ -276,7 +343,7 @@ export type EVENT_SLUGS_QUERY_RESULT = Array<{
 
 // Source: ../web/src/pages/events/[slug].astro
 // Variable: EVENT_QUERY
-// Query: *[_type == "event" && slug.current == $slug][0]{		title, startDateTime, endDateTime, location, coverImage, description,		instructors[]->{ _id, name }	}
+// Query: *[_type == "event" && slug.current == $slug][0]{		title, startDateTime, endDateTime, location, coverImage, description,		instructors[]->{ _id, name },		gallery->{ _id, "slug": slug.current }	}
 export type EVENT_QUERY_RESULT = {
   title: string;
   startDateTime: string;
@@ -311,6 +378,10 @@ export type EVENT_QUERY_RESULT = {
     _id: string;
     name: string;
   }> | null;
+  gallery: {
+    _id: string;
+    slug: string;
+  } | null;
 } | null;
 
 // Source: ../web/src/pages/events/index.astro
@@ -369,12 +440,25 @@ export type GALLERIES_QUERY_RESULT = Array<{
   } | null;
 }>;
 
+// Source: ../web/src/pages/index.astro
+// Variable: HOME_LOCATIONS_QUERY
+// Query: *[_type == "location"] | order(name asc){ _id, name, slug, address, phone, hours }
+export type HOME_LOCATIONS_QUERY_RESULT = Array<{
+  _id: string;
+  name: string;
+  slug: Slug;
+  address: string | null;
+  phone: string | null;
+  hours: Array<string> | null;
+}>;
+
 // Source: ../web/src/pages/instructors/index.astro
 // Variable: INSTRUCTORS_QUERY
-// Query: *[_type == "instructor"] | order(name asc){ _id, name, photo, instruments, bio, email }
+// Query: *[_type == "instructor"] | order(name asc){ _id, name, title, photo, instruments, bio, email, locations[]->{ _id, name, slug } }
 export type INSTRUCTORS_QUERY_RESULT = Array<{
   _id: string;
   name: string;
+  title: string | null;
   photo: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -402,18 +486,39 @@ export type INSTRUCTORS_QUERY_RESULT = Array<{
     _key: string;
   }> | null;
   email: string | null;
+  locations: Array<{
+    _id: string;
+    name: string;
+    slug: Slug;
+  }> | null;
+}>;
+
+// Source: ../web/src/pages/instructors/index.astro
+// Variable: INSTRUCTORS_PAGE_LOCATIONS_QUERY
+// Query: *[_type == "location"] | order(name asc){ _id, name, slug, address, phone, hours }
+export type INSTRUCTORS_PAGE_LOCATIONS_QUERY_RESULT = Array<{
+  _id: string;
+  name: string;
+  slug: Slug;
+  address: string | null;
+  phone: string | null;
+  hours: Array<string> | null;
 }>;
 
 // Query TypeMap
 declare global {
   interface SanityQueries {
+    '*[_type == "location"] | order(name asc){ _id, name, slug, address, phone }':
+      FOOTER_LOCATIONS_QUERY_RESULT | HEADER_LOCATIONS_QUERY_RESULT;
     '*[_type == "event" && defined(slug.current)]{ "params": { "slug": slug.current } }': EVENT_SLUGS_QUERY_RESULT;
-    '*[_type == "event" && slug.current == $slug][0]{\n\t\ttitle, startDateTime, endDateTime, location, coverImage, description,\n\t\tinstructors[]->{ _id, name }\n\t}': EVENT_QUERY_RESULT;
+    '*[_type == "event" && slug.current == $slug][0]{\n\t\ttitle, startDateTime, endDateTime, location, coverImage, description,\n\t\tinstructors[]->{ _id, name },\n\t\tgallery->{ _id, "slug": slug.current }\n\t}': EVENT_QUERY_RESULT;
     '*[_type == "event" && defined(slug.current)] | order(startDateTime asc){ _id, title, slug, startDateTime, location }': EVENTS_QUERY_RESULT;
     '*[_type == "gallery" && defined(slug.current)]{ "params": { "slug": slug.current } }': GALLERY_SLUGS_QUERY_RESULT;
     '*[_type == "gallery" && slug.current == $slug][0]{ title, images }': GALLERY_QUERY_RESULT;
     '*[_type == "gallery" && defined(slug.current)] | order(title asc){ _id, title, slug, "cover": images[0] }': GALLERIES_QUERY_RESULT;
-    '*[_type == "instructor"] | order(name asc){ _id, name, photo, instruments, bio, email }': INSTRUCTORS_QUERY_RESULT;
+    '*[_type == "location"] | order(name asc){ _id, name, slug, address, phone, hours }':
+      HOME_LOCATIONS_QUERY_RESULT | INSTRUCTORS_PAGE_LOCATIONS_QUERY_RESULT;
+    '*[_type == "instructor"] | order(name asc){ _id, name, title, photo, instruments, bio, email, locations[]->{ _id, name, slug } }': INSTRUCTORS_QUERY_RESULT;
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too
