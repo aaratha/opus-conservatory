@@ -1,10 +1,13 @@
 ---
+import { Image } from 'astro:assets';
 import { defineQuery } from 'groq';
 import { sanityClient } from 'sanity:client';
+import HeroImage from '../assets/hero-piano.jpeg';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { slugify } from '../lib/slugify';
 
 const HOME_LOCATIONS_QUERY = defineQuery(
 	`*[_type == "location"] | order(name asc){ _id, name, slug, address, phone, hours }`
@@ -33,12 +36,12 @@ const programs = [
 	{
 		href: '/programs/adaptive-lessons',
 		title: 'Adaptive Lessons',
-		blurb: 'Instruction reshaped around each learner — instrument, environment, and pacing all adjust to fit.',
+		blurb: 'Individualized instruction for students with learning differences, disabilities, or medical conditions, taught by board-certified music therapists.',
 	},
 	{
 		href: '/programs/music-therapy',
 		title: 'Music Therapy',
-		blurb: 'Board-certified music therapy sessions built around clinical goals, not performance skill.',
+		blurb: 'Evidence-based sessions guided by board-certified therapists to support growth, healing, and development — no diagnosis required.',
 	},
 	{
 		href: '/programs/summer-camp',
@@ -49,6 +52,36 @@ const programs = [
 		href: '/recitals',
 		title: 'Recitals',
 		blurb: 'Regular performance opportunities where students share what they’ve been working on.',
+	},
+];
+
+const whyOpus = [
+	'Students are motivated and challenged. They achieve self-discipline and expand their creativity.',
+	'Students make friends and meet musicians from all walks of life.',
+	'Students develop their performance and communication skills through concerts and recitals.',
+	'It’s possible to start learning to play an instrument at any age — our methodology adapts to improve each student’s knowledge.',
+];
+
+const faqs = [
+	{
+		question: 'What can a 3-year-old learn in music lessons?',
+		answer:
+			'Our curriculum introduces young students to rhythm and beats, recognizing sounds and melodies, fun activities that build fine motor skills, and the foundation for instrument playing and music appreciation.',
+	},
+	{
+		question: 'My child faces unique challenges. Is there a place for them at Opus?',
+		answer:
+			'Absolutely. We’ve been teaching children with unique strengths and challenges for years — including students on the spectrum, students who are anxious, and students with physical challenges — through Adaptive Lessons led by our music therapists. Our facilities are fully ADA compliant, with wide doors, large classrooms, ramps, and accessible bathrooms, and we can schedule mornings or weekends for more privacy.',
+	},
+	{
+		question: 'Why start music education so early?',
+		answer:
+			'Research shows early music education boosts cognitive development (memory, focus, problem-solving), creativity and self-expression, social-emotional growth (confidence, patience, teamwork), and motor skills through hands-on practice.',
+	},
+	{
+		question: 'Can I try before committing?',
+		answer:
+			'Yes — we offer a free trial lesson so a new student can experience the joy of music firsthand and see if they’re ready to begin their musical journey with us.',
 	},
 ];
 ---
@@ -62,22 +95,40 @@ const programs = [
 		<Header />
 		<main class="home">
 			<section class="hero">
-				<h1>Music lessons shaped around the student, not the other way around</h1>
-				<p class="lede">
-					Since 2008, Opus Conservatory has paired children and adults with instructors who meet
-					them where they are — across ten instruments, in two Virginia studios, with a free trial
-					lesson to start.
-				</p>
-				<div class="hero-actions">
-					<a class="button" href="/free-trial">Book a Free Trial</a>
-					<a class="button button-outline" href="/instructors">Meet the Instructors</a>
+				<div class="hero-media">
+					<Image src={HeroImage} alt="" width={1500} height={500} class="hero-banner" />
 				</div>
+				<div class="hero-content">
+					<h1>Individualized music lessons for children and adults</h1>
+					<p class="lede">
+						A place where every student is unique in their own way — and so are our teaching styles
+						and methods. Explore personalized music education with talented instructors at our
+						RCM-certified school, across two Virginia studios since 2008.
+					</p>
+					<div class="hero-actions">
+						<a class="button" href="/free-trial">Book a Free Trial</a>
+						<a class="button button-outline" href="/instructors">Meet the Instructors</a>
+					</div>
+				</div>
+			</section>
+
+			<section class="why-opus">
+				<h2>Why choose Opus?</h2>
+				<ul class="why-opus-list">
+					{whyOpus.map((point) => <li>{point}</li>)}
+				</ul>
 			</section>
 
 			<section class="instruments">
 				<h2>Instruments we teach</h2>
 				<ul class="instrument-pills">
-					{instruments.map((instrument) => <li>{instrument}</li>)}
+					{
+						instruments.map((instrument) => (
+							<li>
+								<a href={`/instructors/?instrument=${slugify(instrument)}`}>{instrument}</a>
+							</li>
+						))
+					}
 				</ul>
 			</section>
 
@@ -110,12 +161,12 @@ const programs = [
 											<a href={`tel:${loc.phone.replace(/[^\d+]/g, '')}`}>{loc.phone}</a>
 										</p>
 									)}
-									{loc.hours?.length > 0 && (
+									{loc.hours && loc.hours.length > 0 && (
 										<ul class="hours">
 											{loc.hours.map((line) => <li>{line}</li>)}
 										</ul>
 									)}
-									<a class="learn-more" href={`/instructors?location=${loc.slug.current}`}>
+									<a class="learn-more" href={`/instructors/?location=${loc.slug.current}`}>
 										See {loc.name} instructors &rarr;
 									</a>
 								</div>
@@ -123,6 +174,20 @@ const programs = [
 						) : (
 							<p>Studio locations are managed in Sanity — add a "Location" entry to show it here.</p>
 						)
+					}
+				</div>
+			</section>
+
+			<section class="faq">
+				<h2>Frequently asked questions</h2>
+				<div class="faq-list">
+					{
+						faqs.map((faq) => (
+							<details class="faq-item">
+								<summary>{faq.question}</summary>
+								<p>{faq.answer}</p>
+							</details>
+						))
 					}
 				</div>
 			</section>
@@ -137,29 +202,99 @@ const programs = [
 	</body>
 </html>
 
-<style>
-	.home {
-		width: 100%;
-		max-width: 1080px;
-	}
+<script>
+	const heroBanner = document.querySelector<HTMLElement>('.hero-banner');
 
+	if (heroBanner && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		const speed = 0.35;
+		let ticking = false;
+
+		const updateParallax = () => {
+			heroBanner.style.transform = `translateY(${window.scrollY * speed}px)`;
+			ticking = false;
+		};
+
+		window.addEventListener(
+			'scroll',
+			() => {
+				if (ticking) return;
+				ticking = true;
+				requestAnimationFrame(updateParallax);
+			},
+			{ passive: true }
+		);
+	}
+</script>
+
+<style>
 	section {
 		margin-bottom: 4rem;
 	}
 
 	.hero {
+		position: relative;
+		width: 100vw;
+		margin-left: calc(50% - 50vw);
+		margin-right: calc(50% - 50vw);
+		margin-top: -3em;
+	}
+	.hero-media {
+		position: absolute;
+		inset: 0;
+		overflow: hidden;
+		z-index: 0;
+	}
+	.hero-banner {
+		position: absolute;
+		top: -15%;
+		left: 0;
+		width: 100%;
+		height: 130%;
+		object-fit: cover;
+		border-radius: 0;
+		will-change: transform;
+	}
+	.hero-media::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(180deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.4) 45%, rgba(0, 0, 0, 0.65));
+	}
+	.hero::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: -30px;
+		height: 70px;
+		background: radial-gradient(
+			ellipse at center,
+			rgba(35, 55, 255, 0.22),
+			rgba(168, 85, 247, 0.12) 45%,
+			transparent 75%
+		);
+		filter: blur(20px);
+		pointer-events: none;
+	}
+	.hero-content {
+		position: relative;
+		z-index: 2;
 		text-align: center;
-		padding: 2rem 0 1rem;
+		padding: 5rem 2rem;
 	}
 	.hero h1 {
 		max-width: 780px;
 		margin: 0 auto 0.75rem;
+		color: white;
 	}
 	.lede {
 		max-width: 640px;
 		margin: 0 auto 1.5rem;
 		font-size: 1.15rem;
 		color: rgb(var(--gray-dark));
+	}
+	.hero-content .lede {
+		color: rgba(255, 255, 255, 0.9);
 	}
 	.hero-actions {
 		display: flex;
@@ -176,10 +311,14 @@ const programs = [
 		color: white;
 		font-weight: 700;
 		text-decoration: none;
+		border: 2px solid transparent;
+		transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+			transform 0.2s ease, box-shadow 0.2s ease;
 	}
 	.button:hover {
 		background: var(--accent-dark);
 		color: white;
+		transform: translateY(-2px);
 	}
 	.button-outline {
 		background: transparent;
@@ -189,11 +328,55 @@ const programs = [
 	.button-outline:hover {
 		background: var(--accent);
 		color: white;
+		transform: translateY(-2px);
+	}
+
+	.hero-actions .button {
+		background: white;
+		color: var(--accent-dark);
+		border-color: white;
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+	}
+	.hero-actions .button:hover {
+		background: var(--accent);
+		color: white;
+		border-color: var(--accent);
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+	}
+	.hero-actions .button-outline {
+		background: rgba(255, 255, 255, 0.1);
+		color: white;
+		border-color: rgba(255, 255, 255, 0.75);
+		backdrop-filter: blur(6px);
+		-webkit-backdrop-filter: blur(6px);
+	}
+	.hero-actions .button-outline:hover {
+		background: white;
+		color: var(--accent-dark);
+		border-color: white;
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 	}
 
 	h2 {
 		text-align: center;
 		margin-bottom: 1.5rem;
+	}
+
+	.why-opus-list {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+		gap: 1.25rem;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.why-opus-list li {
+		padding: 1.25rem;
+		border-radius: 14px;
+		background: white;
+		box-shadow: 0 2px 8px rgba(var(--black), 4%);
+		font-size: 0.95rem;
+		color: rgb(var(--gray-dark));
 	}
 
 	.instrument-pills {
@@ -205,12 +388,20 @@ const programs = [
 		margin: 0;
 		padding: 0;
 	}
-	.instrument-pills li {
+	.instrument-pills a {
+		display: inline-block;
 		padding: 0.5em 1.1em;
 		border-radius: 999px;
 		background: white;
 		border: 1px solid rgba(var(--gray), 20%);
 		font-weight: 600;
+		color: inherit;
+		text-decoration: none;
+		transition: border-color 0.15s ease, color 0.15s ease;
+	}
+	.instrument-pills a:hover {
+		border-color: var(--accent);
+		color: var(--accent);
 	}
 
 	.program-grid {
@@ -279,6 +470,41 @@ const programs = [
 		margin-bottom: 0.15rem;
 	}
 
+	.faq-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		max-width: 720px;
+		margin: 0 auto;
+	}
+	.faq-item {
+		padding: 1rem 1.25rem;
+		border-radius: 12px;
+		background: white;
+		box-shadow: 0 2px 8px rgba(var(--black), 4%);
+	}
+	.faq-item summary {
+		cursor: pointer;
+		font-weight: 600;
+		list-style: none;
+	}
+	.faq-item summary::-webkit-details-marker {
+		display: none;
+	}
+	.faq-item summary::before {
+		content: '▸';
+		display: inline-block;
+		margin-right: 0.5em;
+		transition: transform 0.15s ease;
+	}
+	.faq-item[open] summary::before {
+		transform: rotate(90deg);
+	}
+	.faq-item p {
+		margin: 0.75rem 0 0;
+		color: rgb(var(--gray-dark));
+	}
+
 	.cta-banner {
 		text-align: center;
 		padding: 3rem 2rem;
@@ -300,5 +526,11 @@ const programs = [
 	.cta-banner .button:hover {
 		background: rgb(var(--gray-light));
 		color: var(--accent-dark);
+	}
+
+	@media (max-width: 640px) {
+		.hero-content {
+			padding: 3rem 1.25rem;
+		}
 	}
 </style>

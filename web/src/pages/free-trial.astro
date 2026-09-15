@@ -29,10 +29,12 @@ const instruments = [
 	<body>
 		<Header />
 		<main class="content-page">
-			<h1>Book a Free Trial Lesson</h1>
+			<h1>Schedule a free trial lesson</h1>
 			<p class="lede">
-				One complimentary lesson, with no obligation, so we can pair a new student with the right
-				instructor before any commitment.
+				Discover your child's musical potential with a free trial lesson at Opus! We understand that
+				finding the perfect instructor is key to unlocking their true talent — that's why we offer a
+				complimentary session to help pair your child with the right instructor. Check which of our
+				locations is right for you, and sign up for a free trial lesson today.
 			</p>
 
 			<form class="trial-form" name="free-trial">
@@ -87,11 +89,11 @@ const instruments = [
 		flex-direction: column;
 		gap: 1.25rem;
 		max-width: 480px;
-		margin: 2rem 0;
+		margin: 2rem auto;
 	}
 	.form-row {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
 		gap: 1.25rem;
 	}
 	label {

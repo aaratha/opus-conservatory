@@ -5,6 +5,7 @@ import { sanityClient } from 'sanity:client';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
+import { slugify } from '../../lib/slugify';
 import { urlFor } from '../../lib/sanity';
 
 const INSTRUCTORS_QUERY = defineQuery(
@@ -14,45 +15,48 @@ const INSTRUCTORS_PAGE_LOCATIONS_QUERY = defineQuery(
 	`*[_type == "location"] | order(name asc){ _id, name, slug, address, phone, hours }`
 );
 
-const [allInstructors, locations] = await Promise.all([
+const [instructors, locations] = await Promise.all([
 	sanityClient.fetch(INSTRUCTORS_QUERY),
 	sanityClient.fetch(INSTRUCTORS_PAGE_LOCATIONS_QUERY).catch(() => []),
 ]);
 
-const requestedSlug = Astro.url.searchParams.get('location');
-const activeLocation = requestedSlug
-	? locations.find((loc) => loc.slug.current === requestedSlug)
-	: null;
-
-const instructors = activeLocation
-	? allInstructors.filter((instructor) =>
-			instructor.locations?.some((loc) => loc.slug.current === requestedSlug)
-		)
-	: allInstructors;
-
-const title = activeLocation ? `${activeLocation.name} Instructors` : 'Instructors';
-const description = activeLocation
-	? `Meet the instructors teaching at our ${activeLocation.name} studio.`
-	: 'Meet our instructors';
+const instrumentNamesBySlug = new Map<string, string>();
+for (const instructor of instructors) {
+	for (const instrument of instructor.instruments ?? []) {
+		const slug = slugify(instrument);
+		if (!instrumentNamesBySlug.has(slug)) instrumentNamesBySlug.set(slug, instrument);
+	}
+}
+const instruments = [...instrumentNamesBySlug.entries()]
+	.map(([slug, name]) => ({ slug, name }))
+	.sort((a, b) => a.name.localeCompare(b.name));
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead title="Instructors" description="Meet our instructors" />
 	</head>
 	<body>
 		<Header />
 		<main>
-			<h1>{title}</h1>
+			<h1 id="instructors-heading">Instructors</h1>
 
 			<div class="location-filters">
-				<a class:list={['filter-pill', { active: !activeLocation }]} href="/instructors">All</a>
+				<a class="filter-pill active" data-filter-key="location" data-slug="" href="/instructors/">
+					All Locations
+				</a>
 				{
 					locations.map((loc) => (
 						<a
-							class:list={['filter-pill', { active: activeLocation?._id === loc._id }]}
-							href={`/instructors?location=${loc.slug.current}`}
+							class="filter-pill"
+							data-filter-key="location"
+							data-slug={loc.slug.current}
+							data-name={loc.name}
+							data-address={loc.address ?? ''}
+							data-phone={loc.phone ?? ''}
+							data-hours={JSON.stringify(loc.hours ?? [])}
+							href={`/instructors/?location=${loc.slug.current}`}
 						>
 							{loc.name}
 						</a>
@@ -60,85 +64,222 @@ const description = activeLocation
 				}
 			</div>
 
-			{
-				activeLocation && (
-					<div class="location-banner">
-						{activeLocation.address && <span>{activeLocation.address}</span>}
-						{activeLocation.phone && (
-							<span>
-								<a href={`tel:${activeLocation.phone.replace(/[^\d+]/g, '')}`}>
-									{activeLocation.phone}
-								</a>
-							</span>
-						)}
-						{activeLocation.hours?.map((line) => <span>{line}</span>)}
-					</div>
-				)
-			}
+			<div class="instrument-filters">
+				<a class="filter-pill active" data-filter-key="instrument" data-slug="" href="/instructors/">
+					All Instruments
+				</a>
+				{
+					instruments.map((instrument) => (
+						<a
+							class="filter-pill"
+							data-filter-key="instrument"
+							data-slug={instrument.slug}
+							data-name={instrument.name}
+							href={`/instructors/?instrument=${instrument.slug}`}
+						>
+							{instrument.name}
+						</a>
+					))
+				}
+			</div>
+
+			<div class="location-banner" hidden></div>
 
 			<ul class="instructors">
 				{
 					instructors.map((instructor) => (
-						<li class="instructor-card">
-							<div class="instructor-summary">
-								{instructor.photo ? (
-									<img
-										src={urlFor(instructor.photo).width(600).height(600).url()}
-										alt=""
-										width="300"
-										height="300"
-										class="instructor-photo"
-									/>
-								) : (
-									<div class="instructor-photo instructor-photo-placeholder" aria-hidden="true" />
-								)}
-								<div class="instructor-info">
-									<h2>{instructor.name}</h2>
-									{instructor.title && <p class="role">{instructor.title}</p>}
-									{instructor.instruments && (
-										<p class="instruments">{instructor.instruments.join(', ')}</p>
+						<li
+							class="instructor-card"
+							data-locations={instructor.locations?.map((loc) => loc.slug.current).join(' ') ?? ''}
+							data-instruments={instructor.instruments?.map((name) => slugify(name)).join(' ') ?? ''}
+						>
+							<div class="instructor-bio">
+								<div
+									class="instructor-summary"
+									role="button"
+									tabindex="0"
+									aria-expanded="false"
+								>
+									{instructor.photo ? (
+										<img
+											src={urlFor(instructor.photo).width(600).height(600).url()}
+											alt=""
+											width="300"
+											height="300"
+											class="instructor-photo"
+										/>
+									) : (
+										<div class="instructor-photo instructor-photo-placeholder" aria-hidden="true" />
 									)}
-									{instructor.locations?.length > 0 && (
-										<p class="instructor-locations">
-											{instructor.locations.map((loc) => loc.name).join(' · ')}
-										</p>
-									)}
-								</div>
-							</div>
-							{(instructor.bio || instructor.email) && (
-								<details class="instructor-bio">
-									<summary>Bio</summary>
-									<div class="bio-content">
-										{instructor.bio && <PortableText value={instructor.bio} />}
-										{instructor.email && (
-											<p class="email">
-												<a href={`mailto:${instructor.email}`}>{instructor.email}</a>
+									<div class="instructor-info">
+										<h2>{instructor.name}</h2>
+										{instructor.title && <p class="role">{instructor.title}</p>}
+										{instructor.instruments && (
+											<p class="instruments">{instructor.instruments.join(', ')}</p>
+										)}
+										{instructor.locations && instructor.locations.length > 0 && (
+											<p class="instructor-locations">
+												{instructor.locations.map((loc) => loc.name).join(' · ')}
 											</p>
 										)}
+										{(instructor.bio || instructor.email) && (
+											<span class="bio-toggle">Bio</span>
+										)}
 									</div>
-								</details>
-							)}
+								</div>
+								{(instructor.bio || instructor.email) && (
+									<div class="bio-content">
+										<div class="bio-content-inner">
+											{instructor.bio && <PortableText value={instructor.bio} />}
+											{instructor.email && (
+												<p class="email">
+													<a href={`mailto:${instructor.email}`}>{instructor.email}</a>
+												</p>
+											)}
+										</div>
+									</div>
+								)}
+							</div>
 						</li>
 					))
 				}
 			</ul>
 
-			{instructors.length === 0 && <p>No instructors found for this location yet.</p>}
+			<p class="empty-message" hidden>No instructors match these filters yet.</p>
 		</main>
 		<Footer />
 	</body>
 </html>
 
-<style>
-	main {
-		max-width: 960px;
+<script>
+	function applyFilters() {
+		const params = new URLSearchParams(window.location.search);
+		const locationSlug = params.get('location') ?? '';
+		const instrumentSlug = params.get('instrument') ?? '';
+
+		const pills = document.querySelectorAll<HTMLAnchorElement>('.filter-pill');
+		pills.forEach((pill) => {
+			const current = pill.dataset.filterKey === 'instrument' ? instrumentSlug : locationSlug;
+			pill.classList.toggle('active', (pill.dataset.slug ?? '') === current);
+		});
+
+		const activeLocationPill = locationSlug
+			? document.querySelector<HTMLAnchorElement>(
+					`.filter-pill[data-filter-key="location"][data-slug="${CSS.escape(locationSlug)}"]`
+				)
+			: null;
+		const activeInstrumentPill = instrumentSlug
+			? document.querySelector<HTMLAnchorElement>(
+					`.filter-pill[data-filter-key="instrument"][data-slug="${CSS.escape(instrumentSlug)}"]`
+				)
+			: null;
+
+		const cards = document.querySelectorAll<HTMLLIElement>('.instructor-card');
+		let visibleCount = 0;
+		cards.forEach((card) => {
+			const cardLocations = (card.dataset.locations ?? '').split(' ').filter(Boolean);
+			const cardInstruments = (card.dataset.instruments ?? '').split(' ').filter(Boolean);
+			const matchesLocation = !locationSlug || cardLocations.includes(locationSlug);
+			const matchesInstrument = !instrumentSlug || cardInstruments.includes(instrumentSlug);
+			const matches = matchesLocation && matchesInstrument;
+			card.hidden = !matches;
+			if (matches) visibleCount += 1;
+		});
+
+		const emptyMessage = document.querySelector<HTMLElement>('.empty-message');
+		if (emptyMessage) emptyMessage.hidden = visibleCount > 0;
+
+		const heading = document.querySelector<HTMLElement>('#instructors-heading');
+		if (heading) {
+			const parts = [activeLocationPill?.dataset.name, activeInstrumentPill?.dataset.name].filter(
+				Boolean
+			);
+			heading.textContent = parts.length > 0 ? `${parts.join(' · ')} Instructors` : 'Instructors';
+		}
+
+		const banner = document.querySelector<HTMLElement>('.location-banner');
+		if (banner) {
+			banner.innerHTML = '';
+			if (activeLocationPill) {
+				const { address, phone, hours } = activeLocationPill.dataset;
+				if (address) {
+					const span = document.createElement('span');
+					span.textContent = address;
+					banner.append(span);
+				}
+				if (phone) {
+					const span = document.createElement('span');
+					const link = document.createElement('a');
+					link.href = `tel:${phone.replace(/[^\d+]/g, '')}`;
+					link.textContent = phone;
+					span.append(link);
+					banner.append(span);
+				}
+				for (const line of JSON.parse(hours || '[]')) {
+					const span = document.createElement('span');
+					span.textContent = line;
+					banner.append(span);
+				}
+				banner.hidden = false;
+			} else {
+				banner.hidden = true;
+			}
+		}
 	}
 
+	applyFilters();
+	window.addEventListener('popstate', applyFilters);
+
+	document.querySelectorAll<HTMLAnchorElement>('.filter-pill').forEach((pill) => {
+		pill.addEventListener('click', (event) => {
+			event.preventDefault();
+			const key = pill.dataset.filterKey;
+			const slug = pill.dataset.slug ?? '';
+			if (!key) return;
+
+			const params = new URLSearchParams(window.location.search);
+			if (slug) {
+				params.set(key, slug);
+			} else {
+				params.delete(key);
+			}
+
+			const query = params.toString();
+			window.history.pushState({}, '', `/instructors/${query ? `?${query}` : ''}`);
+			applyFilters();
+		});
+	});
+
+	document.querySelectorAll<HTMLElement>('.instructor-bio').forEach((card) => {
+		const trigger = card.querySelector<HTMLElement>('.instructor-summary');
+		if (!trigger) return;
+
+		const toggle = () => {
+			const isOpen = card.classList.toggle('is-open');
+			trigger.setAttribute('aria-expanded', String(isOpen));
+		};
+
+		trigger.addEventListener('click', toggle);
+		trigger.addEventListener('keydown', (event) => {
+			if (event.key !== 'Enter' && event.key !== ' ') return;
+			event.preventDefault();
+			toggle();
+		});
+	});
+</script>
+
+<style>
 	.location-filters {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.6rem;
-		margin: 1rem 0 1.5rem;
+		margin: 1rem 0 0.75rem;
+	}
+	.instrument-filters {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+		margin: 0 0 1.5rem;
 	}
 	.filter-pill {
 		padding: 0.4em 1em;
@@ -165,6 +306,9 @@ const description = activeLocation
 		background: rgb(var(--gray-light));
 		font-size: 0.9rem;
 	}
+	.location-banner[hidden] {
+		display: none;
+	}
 
 	.instructors {
 		display: flex;
@@ -184,7 +328,8 @@ const description = activeLocation
 		transition: box-shadow 0.2s ease;
 	}
 
-	.instructor-card:hover {
+	.instructor-card:hover,
+	.instructor-card:has(.instructor-bio.is-open) {
 		box-shadow: 0 4px 16px rgba(var(--black), 8%);
 	}
 
@@ -193,6 +338,7 @@ const description = activeLocation
 		grid-template-columns: 1fr 1fr;
 		align-items: center;
 		gap: 1.5rem;
+		cursor: pointer;
 	}
 
 	.instructor-photo {
@@ -233,42 +379,75 @@ const description = activeLocation
 		color: rgb(var(--gray));
 	}
 
-	.instructor-bio {
-		margin-top: 1rem;
-		border-top: 1px solid rgba(var(--gray), 20%);
-		padding-top: 0.75rem;
-	}
-
-	.instructor-bio summary {
-		cursor: pointer;
+	.bio-toggle {
+		display: inline-block;
+		margin-top: 0.5rem;
 		font-weight: 600;
-		font-size: 0.9rem;
+		font-size: 0.85rem;
 		color: var(--accent);
-		list-style: none;
 	}
 
-	.instructor-bio summary::-webkit-details-marker {
-		display: none;
-	}
-
-	.instructor-bio summary::before {
+	.bio-toggle::before {
 		content: '▸';
 		display: inline-block;
 		margin-right: 0.4em;
 		transition: transform 0.15s ease;
 	}
 
-	.instructor-bio[open] summary::before {
+	.instructor-bio.is-open .bio-toggle::before {
 		transform: rotate(90deg);
 	}
 
 	.bio-content {
-		margin-top: 0.75rem;
+		position: relative;
+		max-height: 0;
+		overflow: hidden;
+		opacity: 0;
+		transition: max-height 0.5s ease, opacity 0.35s ease;
+	}
+
+	.instructor-bio.is-open .bio-content {
+		max-height: 1400px;
+		opacity: 1;
+	}
+
+	.bio-content::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		height: 2.5rem;
+		background: linear-gradient(to bottom, transparent, white);
+		opacity: 1;
+		transition: opacity 0.3s ease;
+		pointer-events: none;
+	}
+
+	.instructor-bio.is-open .bio-content::after {
+		opacity: 0;
+	}
+
+	.bio-content-inner {
+		border-top: 1px solid rgba(var(--gray), 20%);
+		padding-top: 1rem;
 		font-size: 0.95rem;
 		line-height: 1.6;
 	}
 
 	.bio-content .email {
 		margin-top: 0.75rem;
+	}
+
+	@media (max-width: 520px) {
+		.instructor-summary {
+			grid-template-columns: 1fr;
+			text-align: center;
+		}
+		.instructor-photo,
+		.instructor-photo-placeholder {
+			max-width: 200px;
+			margin: 0 auto;
+		}
 	}
 </style>
