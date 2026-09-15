@@ -15,7 +15,7 @@ const { PUBLIC_SANITY_PROJECT_ID, PUBLIC_SANITY_DATASET } = loadEnv(
 
 // https://astro.build/config
 export default defineConfig({
-    site: 'https://aaratha.com',
+    site: 'https://www.aaratha.com',
     integrations: [
         mdx(),
         sitemap(),
