@@ -20,7 +20,12 @@ const programs = [
 
 <header>
 	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
+		<h2>
+			<a href="/" class="brand">
+				<img src="/logo.svg" alt="" width="48" height="48" class="brand-logo" />
+				<span class="brand-text">{SITE_TITLE}</span>
+			</a>
+		</h2>
 
 		<input type="checkbox" id="nav-toggle" class="nav-toggle-input" />
 
@@ -77,17 +82,56 @@ const programs = [
 		</div>
 	</nav>
 </header>
+<script>
+	const header = document.querySelector('header');
+	const navToggle = document.getElementById('nav-toggle');
+
+	if (header) {
+		const HIDE_AFTER = 80;
+		let lastScrollY = window.scrollY;
+		let ticking = false;
+
+		const update = () => {
+			const currentScrollY = window.scrollY;
+			const menuOpen = navToggle instanceof HTMLInputElement && navToggle.checked;
+
+			if (menuOpen || currentScrollY <= HIDE_AFTER) {
+				header.classList.remove('nav-hidden');
+			} else if (currentScrollY > lastScrollY) {
+				header.classList.add('nav-hidden');
+			} else if (currentScrollY < lastScrollY) {
+				header.classList.remove('nav-hidden');
+			}
+
+			lastScrollY = currentScrollY;
+			ticking = false;
+		};
+
+		window.addEventListener(
+			'scroll',
+			() => {
+				if (!ticking) {
+					requestAnimationFrame(update);
+					ticking = true;
+				}
+			},
+			{ passive: true }
+		);
+	}
+</script>
 <style>
 	header {
 		margin: 0;
 		padding: 0 1em;
-		background: rgba(255, 255, 255, 0.7);
-		backdrop-filter: blur(12px) saturate(180%);
-		-webkit-backdrop-filter: blur(12px) saturate(180%);
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+		background: #ffffff;
 		position: sticky;
 		top: 0;
 		z-index: 10;
+		transform: translateY(0);
+		transition: transform 0.25s ease;
+	}
+	header.nav-hidden {
+		transform: translateY(-100%);
 	}
 	h2 {
 		margin: 0;
@@ -97,6 +141,18 @@ const programs = [
 	h2 a,
 	h2 a.active {
 		text-decoration: none;
+	}
+	.brand {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		color: var(--black);
+	}
+	.brand-logo {
+		display: block;
+		width: 48px;
+		height: 48px;
+		flex-shrink: 0;
 	}
 	nav {
 		display: flex;
@@ -252,6 +308,9 @@ const programs = [
 		nav {
 			flex-wrap: wrap;
 			padding: 0.5em 0;
+		}
+		.brand-text {
+			display: none;
 		}
 		.nav-toggle-label {
 			display: flex;

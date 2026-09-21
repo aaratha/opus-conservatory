@@ -232,6 +232,7 @@ const faqs = [
 	}
 
 	.hero {
+		--overlay-fade: 70%;
 		position: relative;
 		width: 100vw;
 		margin-left: calc(50% - 50vw);
@@ -251,6 +252,7 @@ const faqs = [
 		width: 100%;
 		height: 130%;
 		object-fit: cover;
+		object-position: 25% center;
 		border-radius: 0;
 		will-change: transform;
 	}
@@ -258,7 +260,13 @@ const faqs = [
 		content: '';
 		position: absolute;
 		inset: 0;
-		background: linear-gradient(180deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.4) 45%, rgba(0, 0, 0, 0.65));
+		background: linear-gradient(
+			90deg,
+			rgba(0, 0, 0, 0.65) 0%,
+			rgba(0, 0, 0, 0.5) 30%,
+			rgba(0, 0, 0, 0.2) calc(var(--overlay-fade) - 20%),
+			rgba(0, 0, 0, 0) var(--overlay-fade)
+		);
 	}
 	.hero::before {
 		content: '';
@@ -279,27 +287,29 @@ const faqs = [
 	.hero-content {
 		position: relative;
 		z-index: 2;
-		text-align: center;
+		text-align: left;
 		padding: 5rem 2rem;
+		max-width: 640px;
 	}
 	.hero h1 {
-		max-width: 780px;
-		margin: 0 auto 0.75rem;
+		max-width: 560px;
+		margin: 0 0 0.75rem;
 		color: white;
 	}
 	.lede {
 		max-width: 640px;
-		margin: 0 auto 1.5rem;
+		margin: 0 0 1.5rem;
 		font-size: 1.15rem;
 		color: rgb(var(--gray-dark));
 	}
 	.hero-content .lede {
+		margin-left: 0;
 		color: rgba(255, 255, 255, 0.9);
 	}
 	.hero-actions {
 		display: flex;
 		gap: 1rem;
-		justify-content: center;
+		justify-content: flex-start;
 		flex-wrap: wrap;
 	}
 
@@ -528,9 +538,24 @@ const faqs = [
 		color: var(--accent-dark);
 	}
 
+	@media (max-width: 900px) {
+		.hero {
+			--overlay-fade: 88%;
+		}
+	}
+
 	@media (max-width: 640px) {
 		.hero-content {
 			padding: 3rem 1.25rem;
+		}
+		.hero {
+			--overlay-fade: 100%;
+		}
+	}
+
+	@media (max-width: 720px) {
+		.hero {
+			margin-top: -1em;
 		}
 	}
 </style>
