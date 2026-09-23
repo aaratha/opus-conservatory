@@ -27,7 +27,7 @@ const instruments = [
 	</head>
 	<body>
 		<Header />
-		<main class="content-page">
+		<main class="container">
 			<h1>Private Lessons</h1>
 			<p class="lede">
 				At Opus, we teach life skills, retain our students, and see them off to the best high schools
@@ -48,8 +48,8 @@ const instruments = [
 			</p>
 
 			<h2>Instruments</h2>
-			<ul class="instrument-list">
-				{instruments.map((instrument) => <li>{instrument}</li>)}
+			<ul class="cluster">
+				{instruments.map((instrument) => <li><span class="tag">{instrument}</span></li>)}
 			</ul>
 
 			<p>
@@ -57,7 +57,7 @@ const instruments = [
 				the easiest way to find out.
 			</p>
 
-			<div class="button-row">
+			<div class="cluster">
 				<a class="button" href="/free-trial">Book a Free Trial</a>
 				<a class="button button-outline" href="/instructors">Meet the Instructors</a>
 			</div>
@@ -65,21 +65,3 @@ const instruments = [
 		<Footer />
 	</body>
 </html>
-
-<style>
-	.instrument-list {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.6rem;
-		list-style: none;
-		margin: 0 0 2rem;
-		padding: 0;
-	}
-	.instrument-list li {
-		padding: 0.5em 1.1em;
-		border-radius: 999px;
-		background: white;
-		border: 1px solid rgba(var(--gray), 20%);
-		font-weight: 600;
-	}
-</style>

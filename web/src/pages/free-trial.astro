@@ -28,7 +28,7 @@ const instruments = [
 	</head>
 	<body>
 		<Header />
-		<main class="content-page">
+		<main class="container">
 			<h1>Schedule a free trial lesson</h1>
 			<p class="lede">
 				Discover your child's musical potential with a free trial lesson at Opus! We understand that
@@ -73,7 +73,7 @@ const instruments = [
 				<button class="button" type="submit">Request Trial Lesson</button>
 			</form>
 
-			<p class="fallback">
+			<p class="muted">
 				Prefer to call or email? Reach the Loudoun studio at <a href="tel:5712442852">(571) 244-2852</a> or the Richmond studio at <a href="tel:5717307906">(571) 730-7906</a>.
 			</p>
 		</main>
@@ -87,7 +87,6 @@ const instruments = [
 		flex-direction: column;
 		gap: 1.25rem;
 		max-width: 480px;
-		margin: 2rem auto;
 	}
 	.form-row {
 		display: grid;
@@ -105,12 +104,8 @@ const instruments = [
 	select,
 	textarea {
 		padding: 0.6em 0.75em;
-		border-radius: 8px;
-		border: 1px solid rgba(var(--gray), 30%);
+		border-radius: var(--radius);
+		border: 1px solid var(--color-staff);
 		font-family: inherit;
-	}
-	.fallback {
-		font-size: 0.95rem;
-		color: rgb(var(--gray));
 	}
 </style>

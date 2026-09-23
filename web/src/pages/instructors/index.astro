@@ -39,17 +39,17 @@ const instruments = [...instrumentNamesBySlug.entries()]
 	</head>
 	<body>
 		<Header />
-		<main>
+		<main class="container">
 			<h1 id="instructors-heading">Instructors</h1>
 
-			<div class="location-filters">
-				<a class="filter-pill active" data-filter-key="location" data-slug="" href="/instructors/">
+			<div class="cluster">
+				<a class="tag filter-pill active" data-filter-key="location" data-slug="" href="/instructors/">
 					All Locations
 				</a>
 				{
 					locations.map((loc) => (
 						<a
-							class="filter-pill"
+							class="tag filter-pill"
 							data-filter-key="location"
 							data-slug={loc.slug.current}
 							data-name={loc.name}
@@ -64,14 +64,14 @@ const instruments = [...instrumentNamesBySlug.entries()]
 				}
 			</div>
 
-			<div class="instrument-filters">
-				<a class="filter-pill active" data-filter-key="instrument" data-slug="" href="/instructors/">
+			<div class="cluster">
+				<a class="tag filter-pill active" data-filter-key="instrument" data-slug="" href="/instructors/">
 					All Instruments
 				</a>
 				{
 					instruments.map((instrument) => (
 						<a
-							class="filter-pill"
+							class="tag filter-pill"
 							data-filter-key="instrument"
 							data-slug={instrument.slug}
 							data-name={instrument.name}
@@ -85,11 +85,11 @@ const instruments = [...instrumentNamesBySlug.entries()]
 
 			<div class="location-banner" hidden></div>
 
-			<ul class="instructors">
+			<ul class="stack">
 				{
 					instructors.map((instructor) => (
 						<li
-							class="instructor-card"
+							class="card instructor-card"
 							data-locations={instructor.locations?.map((loc) => loc.slug.current).join(' ') ?? ''}
 							data-instruments={instructor.instruments?.map((name) => slugify(name)).join(' ') ?? ''}
 						>
@@ -115,10 +115,10 @@ const instruments = [...instrumentNamesBySlug.entries()]
 										<h2>{instructor.name}</h2>
 										{instructor.title && <p class="role">{instructor.title}</p>}
 										{instructor.instruments && (
-											<p class="instruments">{instructor.instruments.join(', ')}</p>
+											<p class="muted">{instructor.instruments.join(', ')}</p>
 										)}
 										{instructor.locations && instructor.locations.length > 0 && (
-											<p class="instructor-locations">
+											<p class="muted">
 												{instructor.locations.map((loc) => loc.name).join(' · ')}
 											</p>
 										)}
@@ -145,7 +145,7 @@ const instruments = [...instrumentNamesBySlug.entries()]
 				}
 			</ul>
 
-			<p class="empty-message" hidden>No instructors match these filters yet.</p>
+			<p class="muted empty-message" hidden>No instructors match these filters yet.</p>
 		</main>
 		<Footer />
 	</body>
@@ -269,31 +269,9 @@ const instruments = [...instrumentNamesBySlug.entries()]
 </script>
 
 <style>
-	.location-filters {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.6rem;
-		margin: 1rem 0 0.75rem;
-	}
-	.instrument-filters {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.6rem;
-		margin: 0 0 1.5rem;
-	}
-	.filter-pill {
-		padding: 0.4em 1em;
-		border-radius: 999px;
-		border: 1px solid rgba(var(--gray), 30%);
-		text-decoration: none;
-		color: var(--black);
-		font-weight: 600;
-		font-size: 0.9rem;
-	}
 	.filter-pill.active {
 		background: var(--accent);
-		border-color: var(--accent);
-		color: white;
+		color: var(--color-light);
 	}
 
 	.location-banner {
@@ -302,35 +280,13 @@ const instruments = [...instrumentNamesBySlug.entries()]
 		gap: 0.4rem 1.25rem;
 		margin-bottom: 1.5rem;
 		padding: 0.85rem 1.1rem;
-		border-radius: 10px;
-		background: rgb(var(--gray-light));
+		border-radius: var(--radius);
+		background: var(--color-light);
+		border: 1px solid var(--color-staff);
 		font-size: 0.9rem;
 	}
 	.location-banner[hidden] {
 		display: none;
-	}
-
-	.instructors {
-		display: flex;
-		flex-direction: column;
-		gap: 1.25rem;
-		list-style: none;
-		margin: 2rem 0 0;
-		padding: 0;
-	}
-
-	.instructor-card {
-		border: 1px solid rgba(var(--gray), 25%);
-		border-radius: 12px;
-		padding: 1.25rem;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 4%);
-		transition: box-shadow 0.2s ease;
-	}
-
-	.instructor-card:hover,
-	.instructor-card:has(.instructor-bio.is-open) {
-		box-shadow: 0 4px 16px rgba(var(--black), 8%);
 	}
 
 	.instructor-summary {
@@ -343,40 +299,24 @@ const instruments = [...instrumentNamesBySlug.entries()]
 
 	.instructor-photo {
 		display: block;
-		border-radius: 16px;
+		border-radius: var(--radius);
 		object-fit: cover;
 		aspect-ratio: 1 / 1;
 		width: 100%;
 		height: auto;
 	}
-
 	.instructor-photo-placeholder {
-		background: rgb(var(--gray-light));
+		background: var(--color-staff);
 	}
 
 	.instructor-info h2 {
 		margin: 0;
-		font-size: 1.75rem;
-		line-height: 1.3;
 	}
-
-	.instructor-info .role {
+	.role {
 		margin: 0.15rem 0 0;
 		font-size: 0.95rem;
 		font-weight: 600;
 		color: var(--accent);
-	}
-
-	.instructors .instruments {
-		margin: 0.5rem 0 0;
-		font-size: 1.2rem;
-		color: rgb(var(--gray));
-	}
-
-	.instructor-locations {
-		margin: 0.35rem 0 0;
-		font-size: 0.85rem;
-		color: rgb(var(--gray));
 	}
 
 	.bio-toggle {
@@ -386,14 +326,12 @@ const instruments = [...instrumentNamesBySlug.entries()]
 		font-size: 0.85rem;
 		color: var(--accent);
 	}
-
 	.bio-toggle::before {
 		content: '▸';
 		display: inline-block;
 		margin-right: 0.4em;
 		transition: transform 0.15s ease;
 	}
-
 	.instructor-bio.is-open .bio-toggle::before {
 		transform: rotate(90deg);
 	}
@@ -405,36 +343,15 @@ const instruments = [...instrumentNamesBySlug.entries()]
 		opacity: 0;
 		transition: max-height 0.5s ease, opacity 0.35s ease;
 	}
-
 	.instructor-bio.is-open .bio-content {
 		max-height: 1400px;
 		opacity: 1;
 	}
-
-	.bio-content::after {
-		content: '';
-		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		height: 2.5rem;
-		background: linear-gradient(to bottom, transparent, white);
-		opacity: 1;
-		transition: opacity 0.3s ease;
-		pointer-events: none;
-	}
-
-	.instructor-bio.is-open .bio-content::after {
-		opacity: 0;
-	}
-
 	.bio-content-inner {
-		border-top: 1px solid rgba(var(--gray), 20%);
+		border-top: 1px solid var(--color-staff);
 		padding-top: 1rem;
 		font-size: 0.95rem;
-		line-height: 1.6;
 	}
-
 	.bio-content .email {
 		margin-top: 0.75rem;
 	}

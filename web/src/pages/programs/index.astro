@@ -42,21 +42,19 @@ const programs = [
 	</head>
 	<body>
 		<Header />
-		<main>
-			<div class="page-hero">
-				<h1>Programs</h1>
-				<p class="lede">
-					Whatever brought a student to us — curiosity, a recital goal, or a specific developmental
-					need — there's a program built around it.
-				</p>
-			</div>
-			<div class="fact-grid">
+		<main class="container">
+			<h1>Programs</h1>
+			<p class="lede">
+				Whatever brought a student to us — curiosity, a recital goal, or a specific developmental
+				need — there's a program built around it.
+			</p>
+			<div class="grid">
 				{
 					programs.map((program) => (
-						<a class="card program-card" href={program.href}>
+						<a class="card" href={program.href}>
 							<h3>{program.title}</h3>
 							<p>{program.blurb}</p>
-							<span class="learn-more">Learn more &rarr;</span>
+							<span class="link-arrow">Learn more &rarr;</span>
 						</a>
 					))
 				}
@@ -65,27 +63,3 @@ const programs = [
 		<Footer />
 	</body>
 </html>
-
-<style>
-	.program-card {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		text-decoration: none;
-		color: inherit;
-		transition: box-shadow 0.2s ease, transform 0.2s ease;
-	}
-	.program-card:hover {
-		box-shadow: 0 8px 20px rgba(var(--black), 8%);
-		transform: translateY(-2px);
-	}
-	.program-card p {
-		margin: 0;
-		flex-grow: 1;
-		color: rgb(var(--gray));
-	}
-	.learn-more {
-		font-weight: 700;
-		color: var(--accent);
-	}
-</style>

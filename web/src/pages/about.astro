@@ -14,7 +14,7 @@ const description = 'How Opus Conservatory grew from a four-student piano studio
 	</head>
 	<body>
 		<Header />
-		<main class="about">
+		<main class="container">
 			<h1>About Opus Conservatory</h1>
 
 			<p class="lede">
@@ -58,26 +58,26 @@ const description = 'How Opus Conservatory grew from a four-student piano studio
 				year and welcome new students of any age with a complimentary trial lesson.
 			</p>
 
-			<div class="stats">
-				<div class="stat">
+			<div class="grid grid-sm">
+				<div class="card stat">
 					<span class="stat-number">2008</span>
 					<span class="stat-label">Founded</span>
 				</div>
-				<div class="stat">
+				<div class="card stat">
 					<span class="stat-number">1,000+</span>
 					<span class="stat-label">Students taught</span>
 				</div>
-				<div class="stat">
+				<div class="card stat">
 					<span class="stat-number">2</span>
 					<span class="stat-label">Virginia studios</span>
 				</div>
-				<div class="stat">
+				<div class="card stat">
 					<span class="stat-number">10</span>
 					<span class="stat-label">Instruments taught</span>
 				</div>
 			</div>
 
-			<div class="about-cta">
+			<div class="cluster">
 				<a class="button" href="/instructors">Meet our instructors</a>
 				<a class="button button-outline" href="/free-trial">Book a free trial</a>
 			</div>
@@ -87,62 +87,17 @@ const description = 'How Opus Conservatory grew from a four-student piano studio
 </html>
 
 <style>
-	.lede {
-		font-size: 1.15rem;
-	}
-	.stats {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-		gap: 1.5rem;
-		max-width: 780px;
-		margin: 2.5rem auto;
-		text-align: center;
-	}
 	.stat {
 		display: flex;
 		flex-direction: column;
-		padding: 1.25rem 0.5rem;
-		border-radius: 14px;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 4%);
+		text-align: center;
 	}
 	.stat-number {
-		font-size: 2rem;
+		font-size: 1.75rem;
 		font-weight: 700;
 		color: var(--accent);
 	}
 	.stat-label {
 		font-size: 0.9rem;
-		color: rgb(var(--gray));
-	}
-	.about-cta {
-		display: flex;
-		gap: 1rem;
-		flex-wrap: wrap;
-		max-width: 780px;
-		margin-left: auto;
-		margin-right: auto;
-	}
-	.button {
-		display: inline-block;
-		padding: 0.75em 1.5em;
-		border-radius: 999px;
-		background: var(--accent);
-		color: white;
-		font-weight: 700;
-		text-decoration: none;
-	}
-	.button:hover {
-		background: var(--accent-dark);
-		color: white;
-	}
-	.button-outline {
-		background: transparent;
-		color: var(--accent);
-		border: 2px solid var(--accent);
-	}
-	.button-outline:hover {
-		background: var(--accent);
-		color: white;
 	}
 </style>

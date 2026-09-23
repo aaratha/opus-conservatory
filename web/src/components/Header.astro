@@ -16,91 +16,153 @@ const programs = [
 	{ href: '/programs/summer-camp', label: 'Summer Camp' },
 	{ href: '/recitals', label: 'Recitals' },
 ];
+
+const staffNotes = [
+	{ src: '/notes/quarter_note.svg', start: '100%', y: '-6px', size: '15px', delay: '0s', duration: '10s' },
+	{ src: '/notes/eighth_note.svg', start: '100%', y: '4px', size: '46px', delay: '2s', duration: '10s' },
+	{ src: '/notes/half_note.svg', start: '100%', y: '-4px', size: '15px', delay: '4s', duration: '10s' },
+	{ src: '/notes/whole_note.svg', start: '100%', y: '3px', size: '17px', delay: '6s', duration: '10s' },
+	{ src: '/notes/quarter_note.svg', start: '100%', y: '1px', size: '14px', delay: '8s', duration: '10s' },
+];
 ---
 
-<header>
-	<nav>
-		<h2>
-			<a href="/" class="brand">
-				<img src="/logo.svg" alt="" width="48" height="48" class="brand-logo" />
-				<span class="brand-text">{SITE_TITLE}</span>
+	<div class="masthead">
+		<div class="masthead-row">
+			<a href="/" class="brand" aria-label={SITE_TITLE}>
+				<img src="/logo_full.svg" alt="" width="820" height="345" class="brand-logo" />
 			</a>
-		</h2>
-
-		<input type="checkbox" id="nav-toggle" class="nav-toggle-input" />
-
-		<div class="internal-links">
-			<HeaderLink href="/">Home</HeaderLink>
-
-			<div class="dropdown">
-				<a class="dropdown-trigger" href="/programs" aria-haspopup="true">
-					Programs <span class="caret" aria-hidden="true">▾</span>
-				</a>
-				<div class="dropdown-menu">
-					{
-						programs.map((program) => (
-							<a class="dropdown-item" href={program.href}>
-								{program.label}
-							</a>
-						))
-					}
-				</div>
+			<div class="masthead-block">
+				<p class="tagline muted">Individualized music lessons for children and adults since 2008.</p>
 			</div>
-
-			<div class="dropdown">
-				<a class="dropdown-trigger" href="/instructors" aria-haspopup="true">
-					Instructors <span class="caret" aria-hidden="true">▾</span>
-				</a>
-				<div class="dropdown-menu">
-					{
-						locations.map((loc) => (
-							<a class="dropdown-item location-item" href={`/instructors?location=${loc.slug.current}`}>
-								<span class="location-name">{loc.name}</span>
-								{loc.address && <span class="location-detail">{loc.address}</span>}
-								{loc.phone && <span class="location-detail">{loc.phone}</span>}
-							</a>
-						))
-					}
-					<a class="dropdown-item dropdown-item-all" href="/instructors">All Instructors</a>
-				</div>
-			</div>
-
-			<HeaderLink href="/events">Events</HeaderLink>
-			<HeaderLink href="/galleries">Galleries</HeaderLink>
-			<HeaderLink href="/about">About</HeaderLink>
+			{
+				locations.map((loc) => (
+					<div class="masthead-block">
+						<span class="location-name">{loc.name}</span>
+						{loc.address && <span class="muted">{loc.address}</span>}
+						{loc.phone && <a href={`tel:${loc.phone.replace(/[^\d+]/g, '')}`}>{loc.phone}</a>}
+					</div>
+				))
+			}
 		</div>
+		<div class="staff-wrap">
+			<div class="staff" aria-hidden="true"></div>
+			<div class="staff-notes" aria-hidden="true">
+				{
+					staffNotes.map((note) => (
+						<img
+							class="note"
+							src={note.src}
+							alt=""
+							style={`--start:${note.start}; --y:${note.y}; --size:${note.size}; --delay:${note.delay}; --duration:${note.duration};`}
+						/>
+					))
+				}
+			</div>
+		</div>
+	</div>
 
-		<div class="nav-right">
-			<div class="cta-links">
+	<header>
+		<nav>
+			<input type="checkbox" id="nav-toggle" class="nav-toggle-input" />
+
+			<a href="/" class="nav-brand" aria-label={SITE_TITLE}>
+				<img src="/logo_transparent.svg" alt="" width="48" height="48" />
+			</a>
+
+			<div class="internal-links">
+				<HeaderLink href="/">Home</HeaderLink>
+
+				<div class="dropdown">
+					<a class="dropdown-trigger" href="/programs" aria-haspopup="true">
+						Programs <span class="caret" aria-hidden="true">▾</span>
+					</a>
+					<div class="dropdown-menu dropdown-menu--right">
+						<canvas class="dropdown-strings" aria-hidden="true"></canvas>
+						<div class="dropdown-menu-inner">
+							{
+								programs.map((program) => (
+									<a class="dropdown-item" href={program.href}>
+										<span class="dropdown-item-content">{program.label}</span>
+									</a>
+								))
+							}
+						</div>
+					</div>
+				</div>
+
+				<div class="dropdown">
+					<a class="dropdown-trigger" href="/instructors" aria-haspopup="true">
+						Instructors <span class="caret" aria-hidden="true">▾</span>
+					</a>
+					<div class="dropdown-menu">
+						<canvas class="dropdown-strings" aria-hidden="true"></canvas>
+						<div class="dropdown-menu-inner">
+							{
+								locations.map((loc) => (
+									<a class="dropdown-item" href={`/instructors?location=${loc.slug.current}`}>
+										<span class="dropdown-item-content">
+											<span class="location-name">{loc.name}</span>
+											{loc.address && <span class="muted">{loc.address}</span>}
+											{loc.phone && <span class="muted">{loc.phone}</span>}
+										</span>
+									</a>
+								))
+							}
+							<a class="dropdown-item dropdown-item-all" href="/instructors">All Instructors</a>
+						</div>
+					</div>
+				</div>
+
+				<HeaderLink href="/events">Events</HeaderLink>
+				<HeaderLink href="/galleries">Galleries</HeaderLink>
+				<HeaderLink href="/about">About</HeaderLink>
+			</div>
+
+			<div class="nav-right">
 				<a class="button" href="/free-trial">Free Trial</a>
+				<label for="nav-toggle" class="nav-toggle-label" aria-label="Toggle navigation menu">
+					<span></span>
+					<span></span>
+					<span></span>
+				</label>
 			</div>
-			<label for="nav-toggle" class="nav-toggle-label" aria-label="Toggle navigation menu">
-				<span></span>
-				<span></span>
-				<span></span>
-			</label>
-		</div>
-	</nav>
-</header>
+		</nav>
+	</header>
+
 <script>
-	const header = document.querySelector('header');
+	const header = document.querySelector<HTMLElement>('header');
+	const masthead = document.querySelector<HTMLElement>('.masthead');
 	const navToggle = document.getElementById('nav-toggle');
 
 	if (header) {
-		const HIDE_AFTER = 80;
-		let lastScrollY = window.scrollY;
+		let mastheadHeight = masthead ? masthead.offsetHeight : 0;
+		let hidden = 0;
+		let lastScrollY = Math.max(window.scrollY, 0);
+		let wasStuck = false;
 		let ticking = false;
 
-		const update = () => {
-			const currentScrollY = window.scrollY;
-			const menuOpen = navToggle instanceof HTMLInputElement && navToggle.checked;
+		window.addEventListener('resize', () => {
+			mastheadHeight = masthead ? masthead.offsetHeight : 0;
+		});
 
-			if (menuOpen || currentScrollY <= HIDE_AFTER) {
-				header.classList.remove('nav-hidden');
-			} else if (currentScrollY > lastScrollY) {
-				header.classList.add('nav-hidden');
-			} else if (currentScrollY < lastScrollY) {
-				header.classList.remove('nav-hidden');
+		const update = () => {
+			const currentScrollY = Math.max(window.scrollY, 0);
+			const menuOpen = navToggle instanceof HTMLInputElement && navToggle.checked;
+			const isStuck = currentScrollY >= mastheadHeight;
+
+			if (!isStuck || menuOpen) {
+				hidden = 0;
+				header.style.transform = '';
+				wasStuck = false;
+			} else {
+				if (!wasStuck) {
+					lastScrollY = currentScrollY;
+					wasStuck = true;
+				}
+				const maxHidden = header.offsetHeight;
+				const delta = currentScrollY - lastScrollY;
+				hidden = Math.min(maxHidden, Math.max(0, hidden + delta));
+				header.style.transform = `translateY(-${hidden}px)`;
 			}
 
 			lastScrollY = currentScrollY;
@@ -119,59 +181,398 @@ const programs = [
 		);
 	}
 </script>
-<style>
-	header {
-		margin: 0;
-		padding: 0 1em;
-		background: #ffffff;
-		position: sticky;
-		top: 0;
-		z-index: 10;
-		transform: translateY(0);
-		transition: transform 0.25s ease;
-	}
-	header.nav-hidden {
-		transform: translateY(-100%);
-	}
-	h2 {
-		margin: 0;
-		font-size: 1em;
+
+<script>
+	class PullCord {
+		points: { x: number; y: number; oldX: number; oldY: number }[];
+		segmentLength: number;
+
+		constructor(segments: number, restLength: number) {
+			this.points = Array.from({ length: segments + 1 }, () => ({ x: 0, y: 0, oldX: 0, oldY: 0 }));
+			this.segmentLength = restLength / segments;
+		}
+
+		reset(x: number, y: number) {
+			for (const p of this.points) {
+				p.x = x;
+				p.y = y;
+				p.oldX = x;
+				p.oldY = y;
+			}
+		}
+
+		step(anchorX: number, anchorY: number) {
+			const pts = this.points;
+			const gravity = 0.6;
+			const damping = 0.985;
+
+			for (let i = 1; i < pts.length; i++) {
+				const p = pts[i];
+				const vx = (p.x - p.oldX) * damping;
+				const vy = (p.y - p.oldY) * damping;
+				p.oldX = p.x;
+				p.oldY = p.y;
+				p.x += vx;
+				p.y += vy + gravity;
+			}
+
+			pts[0].x = anchorX;
+			pts[0].y = anchorY;
+			pts[0].oldX = anchorX;
+			pts[0].oldY = anchorY;
+
+			for (let iter = 0; iter < 8; iter++) {
+				for (let i = 0; i < pts.length - 1; i++) {
+					const a = pts[i];
+					const b = pts[i + 1];
+					const dx = b.x - a.x;
+					const dy = b.y - a.y;
+					const dist = Math.sqrt(dx * dx + dy * dy) || 0.0001;
+					const diff = (dist - this.segmentLength) / dist;
+					const offsetX = dx * 0.5 * diff;
+					const offsetY = dy * 0.5 * diff;
+					if (i !== 0) {
+						a.x += offsetX;
+						a.y += offsetY;
+					}
+					b.x -= offsetX;
+					b.y -= offsetY;
+				}
+				pts[0].x = anchorX;
+				pts[0].y = anchorY;
+			}
+		}
+
+		isSettled(threshold = 0.05) {
+			for (let i = 1; i < this.points.length; i++) {
+				const p = this.points[i];
+				if (Math.hypot(p.x - p.oldX, p.y - p.oldY) > threshold) return false;
+			}
+			return true;
+		}
+
+		kick(amount: number) {
+			const last = this.points[this.points.length - 1];
+			last.oldX = last.x - amount;
+		}
 	}
 
-	h2 a,
-	h2 a.active {
-		text-decoration: none;
+	function easeOutCubic(t: number) {
+		return 1 - Math.pow(1 - t, 3);
 	}
-	.brand {
-		display: flex;
-		align-items: center;
-		gap: 0.5em;
-		color: var(--black);
+
+	class DropdownDrawer {
+		root: HTMLElement;
+		inner: HTMLElement;
+		canvas: HTMLCanvasElement;
+		ctx: CanvasRenderingContext2D | null;
+		cord = new PullCord(6, 26);
+		drawerOpen = 0;
+		drawerTarget = 0;
+		animFrom = 0;
+		animStart = 0;
+		animDuration = 480;
+		innerHeight = 0;
+		width = 0;
+		canvasHeight = 0;
+		dpr = Math.min(window.devicePixelRatio || 1, 2);
+		raf: number | null = null;
+		strokeColor = '#24201c';
+		ringRadius = 5;
+		extra = 40;
+		hideOffset = 34;
+		initialized = false;
+		settleFrames = 0;
+
+		constructor(root: HTMLElement) {
+			this.root = root;
+			this.inner = root.querySelector<HTMLElement>('.dropdown-menu-inner')!;
+			this.canvas = root.querySelector<HTMLCanvasElement>('.dropdown-strings')!;
+			this.ctx = this.canvas.getContext('2d');
+			this.strokeColor = getComputedStyle(document.documentElement).getPropertyValue('--color-ink').trim() || this.strokeColor;
+
+			this.inner.style.transition = 'none';
+			this.inner.style.transform = 'translateY(-100%)';
+		}
+
+		measure() {
+			this.width = this.root.offsetWidth;
+			this.innerHeight = this.inner.offsetHeight;
+			this.canvasHeight = this.innerHeight + this.extra;
+
+			this.root.style.height = `${this.canvasHeight}px`;
+
+			this.canvas.width = this.width * this.dpr;
+			this.canvas.height = this.canvasHeight * this.dpr;
+			this.canvas.style.width = `${this.width}px`;
+			this.canvas.style.height = `${this.canvasHeight}px`;
+
+			if (!this.initialized) {
+				this.cord.reset(this.width / 2, -this.hideOffset);
+				this.initialized = true;
+			}
+		}
+
+		startAnim(target: number, duration: number) {
+			this.drawerTarget = target;
+			this.animFrom = this.drawerOpen;
+			this.animStart = performance.now();
+			this.animDuration = duration;
+		}
+
+		open() {
+			this.measure();
+			this.root.style.visibility = 'visible';
+			this.root.style.pointerEvents = 'auto';
+			this.startAnim(1, 480);
+			this.cord.kick(7);
+			this.ensureLoop();
+		}
+
+		close() {
+			this.startAnim(0, 260);
+			this.cord.kick(-7);
+			this.root.style.pointerEvents = 'none';
+			this.ensureLoop();
+		}
+
+		ensureLoop() {
+			if (this.raf === null) {
+				this.raf = requestAnimationFrame(this.tick);
+			}
+		}
+
+		tick = () => {
+			const elapsed = performance.now() - this.animStart;
+			const t = Math.min(1, elapsed / this.animDuration);
+			const drawerDone = t >= 1;
+			this.drawerOpen = this.animFrom + (this.drawerTarget - this.animFrom) * easeOutCubic(t);
+
+			this.inner.style.transform = `translateY(${(this.drawerOpen - 1) * 100}%)`;
+
+			const anchorX = this.width / 2;
+			const anchorY = -this.hideOffset + this.drawerOpen * (this.innerHeight + this.hideOffset);
+			this.cord.step(anchorX, anchorY);
+
+			const ctx = this.ctx;
+			if (ctx) {
+				ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+				ctx.clearRect(0, 0, this.width, this.canvasHeight);
+
+				if (this.drawerOpen > 0.001) {
+					const pts = this.cord.points;
+					const ring = pts[pts.length - 1];
+					const prev = pts[pts.length - 2];
+					const dx = ring.x - prev.x;
+					const dy = ring.y - prev.y;
+					const dist = Math.hypot(dx, dy) || 0.0001;
+					const edgeX = ring.x - (dx / dist) * this.ringRadius;
+					const edgeY = ring.y - (dy / dist) * this.ringRadius;
+
+					ctx.strokeStyle = this.strokeColor;
+					ctx.lineWidth = 1.5;
+					ctx.beginPath();
+					pts.forEach((pt, i) => {
+						if (i === 0) ctx.moveTo(pt.x, pt.y);
+						else if (i === pts.length - 1) ctx.lineTo(edgeX, edgeY);
+						else ctx.lineTo(pt.x, pt.y);
+					});
+					ctx.stroke();
+
+					ctx.beginPath();
+					ctx.arc(ring.x, ring.y, this.ringRadius, 0, Math.PI * 2);
+					ctx.stroke();
+				}
+			}
+
+			if (this.cord.isSettled()) {
+				this.settleFrames++;
+			} else {
+				this.settleFrames = 0;
+			}
+			const cordSettled = this.settleFrames > 14 || elapsed > 4000;
+			const ring = this.cord.points[this.cord.points.length - 1];
+			const ringHidden = ring.y <= 2;
+			const fullyClosed = drawerDone && this.drawerTarget === 0 && ringHidden && cordSettled;
+			const fullyOpenSettled = drawerDone && this.drawerTarget === 1 && cordSettled;
+
+			if (fullyClosed || fullyOpenSettled) {
+				this.raf = null;
+				if (fullyClosed) {
+					this.root.style.visibility = 'hidden';
+					this.root.style.pointerEvents = 'none';
+					if (ctx) ctx.clearRect(0, 0, this.width, this.canvasHeight);
+				}
+				return;
+			}
+
+			this.raf = requestAnimationFrame(this.tick);
+		};
 	}
-	.brand-logo {
-		display: block;
-		width: 48px;
-		height: 48px;
-		flex-shrink: 0;
+
+	const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	const isDesktopLayout = window.matchMedia('(min-width: 721px)').matches;
+
+	document.querySelectorAll<HTMLElement>('.dropdown').forEach((dropdownEl) => {
+		const menu = dropdownEl.querySelector<HTMLElement>('.dropdown-menu');
+		if (!menu) return;
+
+		if (prefersReducedMotion || !isDesktopLayout) return;
+
+		const drawer = new DropdownDrawer(menu);
+
+		dropdownEl.addEventListener('mouseenter', () => drawer.open());
+		dropdownEl.addEventListener('mouseleave', () => drawer.close());
+		dropdownEl.addEventListener('focusin', () => drawer.open());
+		dropdownEl.addEventListener('focusout', (event) => {
+			if (!dropdownEl.contains(event.relatedTarget as Node)) drawer.close();
+		});
+
+		window.addEventListener('resize', () => drawer.measure());
+	});
+</script>
+
+<style>
+	.masthead {
+		padding-block: 2rem 0;
+		background: var(--color-paper);
 	}
-	nav {
+	.masthead-row {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		gap: 1.5rem;
+		padding-inline: 4em;
+	}
+	.masthead .brand {
+		display: inline-flex;
+		align-items: center;
+		flex-shrink: 0;
+		color: var(--color-ink);
+		text-decoration: none;
+	}
+	.masthead .brand-logo {
+		display: block;
+		width: 320px;
+		height: auto;
+	}
+	.masthead-block {
+		display: flex;
+		flex-direction: column;
+		align-self: flex-start;
+		gap: 0.2rem;
+		margin-top: 2.1rem;
+		text-align: left;
+		font-size: 0.85rem;
+		max-width: 200px;
+	}
+	.masthead .tagline {
+		margin: 0;
+		font-size: 1.15rem;
+		text-align: left;
+	}
+	.masthead-block a {
+		color: var(--color-ink);
+		text-decoration: none;
+	}
+	.masthead-block a:hover {
+		color: var(--accent);
+	}
+	.staff-wrap {
+		position: relative;
+		overflow: hidden;
+		margin-top: 1.5rem;
+		padding-top: 28px;
+		padding-bottom: 28px;
+	}
+	.masthead .staff {
+		margin: 0;
+		background-image: repeating-linear-gradient(
+			to bottom,
+			var(--color-ink) 0,
+			var(--color-ink) var(--staff-thickness),
+			transparent var(--staff-thickness),
+			transparent calc(var(--staff-thickness) + var(--staff-gap))
+		);
+		background-position: 0 0;
+		background-size: auto;
+		background-repeat: repeat;
+	}
+	.staff-notes {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+	.staff-notes .note {
+		position: absolute;
+		top: 50%;
+		left: var(--start);
+		width: var(--size);
+		height: auto;
+		opacity: 0;
+		transform: translateY(calc(-50% + var(--y))) translateX(0);
+		animation: note-drift var(--duration) linear infinite;
+		animation-delay: var(--delay);
+	}
+	@keyframes note-drift {
+		0% {
+			opacity: 1;
+			transform: translateY(calc(-50% + var(--y))) translateX(0);
+		}
+		85% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+			transform: translateY(calc(-50% + var(--y))) translateX(-150vw);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.staff-notes {
+			display: none;
+		}
+	}
+
+	header {
+		position: sticky;
+		top: 0;
+		z-index: 20;
+		padding-inline: 1em 0;
+		background: var(--color-paper);
+		border-bottom: 2px solid var(--color-piano);
+	}
+
+	nav {
+		display: grid;
+		grid-template-columns: 1fr auto 1fr;
+		align-items: center;
 		gap: 1em;
 	}
+
+	.nav-brand {
+		display: flex;
+		align-items: center;
+		justify-self: start;
+		color: var(--color-ink);
+	}
+	.nav-brand img {
+		display: block;
+		width: 48px;
+		height: 48px;
+	}
+
 	.internal-links {
 		display: flex;
 		align-items: center;
+		justify-self: center;
 	}
 	nav > .internal-links > :global(a) {
 		padding: 1em 0.5em;
-		color: var(--black);
+		color: var(--color-ink);
 		border-bottom: 4px solid transparent;
 		text-decoration: none;
 	}
 	nav :global(a.active) {
-		text-decoration: none;
 		border-bottom-color: var(--accent);
 	}
 
@@ -187,91 +588,119 @@ const programs = [
 		border: none;
 		border-bottom: 4px solid transparent;
 		font: inherit;
-		font-size: 1em;
-		color: var(--black);
+		color: var(--color-ink);
 		text-decoration: none;
 		cursor: pointer;
+		transition: color 0.2s ease;
+	}
+	.dropdown-trigger:hover {
+		color: var(--accent);
 	}
 	.caret {
+		display: inline-block;
 		font-size: 0.7em;
-		color: rgb(var(--gray));
+		color: var(--color-staff);
+		transition: transform 0.25s ease, color 0.2s ease;
+	}
+	.dropdown:hover .caret,
+	.dropdown:focus-within .caret {
+		transform: rotate(180deg);
+		color: var(--accent);
 	}
 	.dropdown-menu {
-		display: flex;
 		position: absolute;
 		top: 100%;
 		left: 0;
 		min-width: 220px;
-		background: white;
-		border-radius: 10px;
-		box-shadow: var(--box-shadow);
-		padding: 0.5em;
-		flex-direction: column;
-		opacity: 0;
+		overflow: hidden;
 		visibility: hidden;
 		pointer-events: none;
-		transform: translateY(-6px);
-		transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+		transition: visibility 0.3s ease;
+	}
+	.dropdown-menu--right {
+		left: auto;
+		right: 0;
+	}
+	.dropdown-strings {
+		position: absolute;
+		inset: 0;
+		display: block;
+		pointer-events: none;
+	}
+	.dropdown-menu-inner {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		padding: 0.5em;
+		background: var(--color-paper);
+		border: 2px solid var(--color-piano);
+		border-top: none;
+		transform: translateY(-100%);
+		transition: transform 0.3s ease;
 	}
 	.dropdown:hover .dropdown-menu,
 	.dropdown:focus-within .dropdown-menu {
-		opacity: 1;
 		visibility: visible;
 		pointer-events: auto;
-		transform: translateY(0);
 	}
-	.dropdown:hover .dropdown-trigger,
-	.dropdown:focus-within .dropdown-trigger {
-		border-bottom-color: var(--accent);
+	.dropdown:hover .dropdown-menu-inner,
+	.dropdown:focus-within .dropdown-menu-inner {
+		transform: translateY(0);
 	}
 	.dropdown-item {
 		display: flex;
 		flex-direction: column;
 		padding: 0.6em 0.75em;
 		border-radius: 6px;
+		color: var(--color-ink);
 		text-decoration: none;
-		color: var(--black);
 		font-size: 0.95rem;
+		overflow: hidden;
+		transition: background-color 0.2s ease, color 0.2s ease;
 	}
 	.dropdown-item:hover {
-		background: rgb(var(--gray-light));
+		background: color-mix(in srgb, var(--accent) 12%, var(--color-light));
+	}
+	.dropdown-item-content {
+		display: flex;
+		flex-direction: column;
+		transition: transform 0.2s ease;
+	}
+	.dropdown-item:hover .dropdown-item-content {
+		transform: translateX(6px);
 	}
 	.location-name {
 		font-weight: 700;
 	}
-	.location-detail {
-		font-size: 0.85em;
-		color: rgb(var(--gray));
-	}
 	.dropdown-item-all {
-		margin-top: 0.25em;
-		border-top: 1px solid rgba(var(--gray), 20%);
-		padding-top: 0.6em;
-		font-weight: 600;
-		color: var(--accent);
-	}
-
-	.cta-links .button {
-		display: inline-block;
-		padding: 0.6em 1.25em;
-		border-radius: 999px;
-		background: var(--accent);
-		color: white;
+		margin-top: 0.4em;
+		padding-top: 0.75em;
+		border-top: 1px solid var(--color-staff);
+		border-radius: 0;
 		font-weight: 700;
-		text-decoration: none;
-		white-space: nowrap;
-		transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+		text-align: center;
+		background: var(--accent);
+		color: var(--color-light);
 	}
-	.cta-links .button:hover {
-		background: var(--accent-dark);
-		transform: translateY(-2px);
-		box-shadow: 0 6px 16px rgba(35, 55, 255, 0.35);
+	.dropdown-item-all:hover {
+		padding-left: 0.75em;
+		background: color-mix(in srgb, var(--accent) 80%, var(--color-ink));
+		color: var(--color-light);
 	}
 
 	.nav-right {
 		display: flex;
-		align-items: center;
+		align-items: stretch;
 		gap: 1em;
+		justify-self: end;
+		align-self: stretch;
+	}
+	.nav-right .button {
+		display: flex;
+		align-items: center;
+		margin: 0;
+		padding-block: 0;
+		border-radius: 0;
 	}
 
 	.nav-toggle-input {
@@ -281,6 +710,7 @@ const programs = [
 		display: none;
 		flex-direction: column;
 		justify-content: center;
+		align-self: center;
 		gap: 5px;
 		width: 32px;
 		height: 32px;
@@ -290,7 +720,7 @@ const programs = [
 		display: block;
 		height: 3px;
 		width: 100%;
-		background: rgb(var(--black));
+		background: var(--color-ink);
 		border-radius: 2px;
 		transition: transform 0.2s ease, opacity 0.2s ease;
 	}
@@ -305,35 +735,57 @@ const programs = [
 	}
 
 	@media (max-width: 720px) {
-		nav {
-			flex-wrap: wrap;
-			padding: 0.5em 0;
+		.masthead {
+			padding-block: 1.5rem 1.25rem;
 		}
-		.brand-text {
-			display: none;
+		.masthead-row {
+			flex-direction: column;
+			text-align: center;
+			padding-inline: 1em;
+		}
+		.masthead .brand-logo {
+			width: 240px;
+			height: auto;
+		}
+		.masthead-block {
+			align-items: center;
+			align-self: center;
+			margin-top: 0;
+			text-align: center;
+			max-width: none;
+		}
+		.masthead .tagline {
+			text-align: center;
+			font-size: 0.85rem;
+		}
+		nav {
+			row-gap: 0.5em;
+			padding-block: 0.5em;
 		}
 		.nav-toggle-label {
 			display: flex;
 		}
 		.internal-links {
 			display: none;
-			order: 3;
-			flex-basis: 100%;
+			grid-column: 1 / -1;
 			flex-direction: column;
 			align-items: stretch;
-			flex-wrap: wrap;
+			justify-self: stretch;
 		}
 		.nav-toggle-input:checked ~ .internal-links {
 			display: flex;
 		}
 		.dropdown-menu {
-			display: flex;
 			position: static;
-			box-shadow: none;
-			border: 1px solid rgba(var(--gray), 20%);
-			opacity: 1;
+			overflow: visible;
 			visibility: visible;
 			pointer-events: auto;
+		}
+		.dropdown-strings {
+			display: none;
+		}
+		.dropdown-menu-inner {
+			border: 1px solid var(--color-staff);
 			transform: none;
 			transition: none;
 		}

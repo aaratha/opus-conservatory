@@ -93,7 +93,7 @@ const faqs = [
 	</head>
 	<body>
 		<Header />
-		<main class="home">
+		<main>
 			<section class="hero">
 				<div class="hero-media">
 					<Image src={HeroImage} alt="" width={1500} height={500} class="hero-banner" />
@@ -105,98 +105,128 @@ const faqs = [
 						and methods. Explore personalized music education with talented instructors at our
 						RCM-certified school, across two Virginia studios since 2008.
 					</p>
-					<div class="hero-actions">
+					<div class="hero-actions cluster">
 						<a class="button" href="/free-trial">Book a Free Trial</a>
 						<a class="button button-outline" href="/instructors">Meet the Instructors</a>
 					</div>
 				</div>
 			</section>
 
-			<section class="why-opus">
-				<h2>Why choose Opus?</h2>
-				<ul class="why-opus-list">
-					{whyOpus.map((point) => <li>{point}</li>)}
-				</ul>
-			</section>
+			<div class="sheet">
+				<div class="staff"></div>
 
-			<section class="instruments">
-				<h2>Instruments we teach</h2>
-				<ul class="instrument-pills">
-					{
-						instruments.map((instrument) => (
-							<li>
-								<a href={`/instructors/?instrument=${slugify(instrument)}`}>{instrument}</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
+				<section class="section">
+					<div class="container">
+						<h2>Why choose Opus?</h2>
+						<ul class="grid">
+							{whyOpus.map((point) => <li class="card">{point}</li>)}
+						</ul>
+					</div>
+				</section>
 
-			<section class="programs">
-				<h2>Programs</h2>
-				<div class="program-grid">
-					{
-						programs.map((program) => (
-							<a class="program-card" href={program.href}>
-								<h3>{program.title}</h3>
-								<p>{program.blurb}</p>
-								<span class="learn-more">Learn more &rarr;</span>
-							</a>
-						))
-					}
-				</div>
-			</section>
+				<div class="staff"></div>
 
-			<section class="locations">
-				<h2>Our studios</h2>
-				<div class="location-grid">
-					{
-						locations.length > 0 ? (
-							locations.map((loc) => (
-								<div class="location-card">
-									<h3>{loc.name}</h3>
-									{loc.address && <p class="detail">{loc.address}</p>}
-									{loc.phone && (
-										<p class="detail">
-											<a href={`tel:${loc.phone.replace(/[^\d+]/g, '')}`}>{loc.phone}</a>
-										</p>
-									)}
-									{loc.hours && loc.hours.length > 0 && (
-										<ul class="hours">
-											{loc.hours.map((line) => <li>{line}</li>)}
-										</ul>
-									)}
-									<a class="learn-more" href={`/instructors/?location=${loc.slug.current}`}>
-										See {loc.name} instructors &rarr;
+				<section class="section">
+					<div class="container">
+						<h2>Instruments we teach</h2>
+						<ul class="cluster">
+							{
+								instruments.map((instrument) => (
+									<li>
+										<a class="tag" href={`/instructors/?instrument=${slugify(instrument)}`}>
+											{instrument}
+										</a>
+									</li>
+								))
+							}
+						</ul>
+					</div>
+				</section>
+
+				<div class="staff"></div>
+
+				<section class="section">
+					<div class="container">
+						<h2>Programs</h2>
+						<div class="grid">
+							{
+								programs.map((program) => (
+									<a class="card" href={program.href}>
+										<h3>{program.title}</h3>
+										<p>{program.blurb}</p>
+										<span class="link-arrow">Learn more &rarr;</span>
 									</a>
-								</div>
-							))
-						) : (
-							<p>Studio locations are managed in Sanity — add a "Location" entry to show it here.</p>
-						)
-					}
-				</div>
-			</section>
+								))
+							}
+						</div>
+					</div>
+				</section>
 
-			<section class="faq">
-				<h2>Frequently asked questions</h2>
-				<div class="faq-list">
-					{
-						faqs.map((faq) => (
-							<details class="faq-item">
-								<summary>{faq.question}</summary>
-								<p>{faq.answer}</p>
-							</details>
-						))
-					}
-				</div>
-			</section>
+				<div class="staff"></div>
 
-			<section class="cta-banner">
-				<h2>Ready to try a lesson?</h2>
-				<p>Your first lesson is on us — tell us your instrument and preferred studio, and we’ll pair you with an instructor.</p>
-				<a class="button" href="/free-trial">Book a Free Trial</a>
-			</section>
+				<section class="section">
+					<div class="container">
+						<h2>Our studios</h2>
+						<div class="grid">
+							{
+								locations.length > 0 ? (
+									locations.map((loc) => (
+										<div class="card">
+											<h3>{loc.name}</h3>
+											{loc.address && <p class="muted">{loc.address}</p>}
+											{loc.phone && (
+												<p class="muted">
+													<a href={`tel:${loc.phone.replace(/[^\d+]/g, '')}`}>{loc.phone}</a>
+												</p>
+											)}
+											{loc.hours && loc.hours.length > 0 && (
+												<ul class="muted">
+													{loc.hours.map((line) => <li>{line}</li>)}
+												</ul>
+											)}
+											<a class="link-arrow" href={`/instructors/?location=${loc.slug.current}`}>
+												See {loc.name} instructors &rarr;
+											</a>
+										</div>
+									))
+								) : (
+									<p>Studio locations are managed in Sanity — add a "Location" entry to show it here.</p>
+								)
+							}
+						</div>
+					</div>
+				</section>
+
+				<div class="staff"></div>
+
+				<section class="section">
+					<div class="container">
+						<h2>Frequently asked questions</h2>
+						<div class="stack">
+							{
+								faqs.map((faq) => (
+									<details class="card">
+										<summary>{faq.question}</summary>
+										<p>{faq.answer}</p>
+									</details>
+								))
+							}
+						</div>
+					</div>
+				</section>
+
+				<div class="staff"></div>
+
+				<section class="section">
+					<div class="container">
+						<div class="cta-banner">
+							<h2>Ready to try a lesson?</h2>
+							<p>Your first lesson is on us — tell us your instrument and preferred studio, and we’ll pair you with an instructor.</p>
+							<a class="button" href="/free-trial">Book a Free Trial</a>
+						</div>
+					</div>
+				</section>
+			</div>
 		</main>
 		<Footer />
 	</body>
@@ -204,13 +234,17 @@ const faqs = [
 
 <script>
 	const heroBanner = document.querySelector<HTMLElement>('.hero-banner');
+	const hero = document.querySelector<HTMLElement>('.hero');
 
-	if (heroBanner && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+	if (heroBanner && hero && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 		const speed = 0.35;
+		const overhang = 0.15;
 		let ticking = false;
 
 		const updateParallax = () => {
-			heroBanner.style.transform = `translateY(${window.scrollY * speed}px)`;
+			const maxOffset = hero.offsetHeight * overhang;
+			const offset = Math.min(window.scrollY * speed, maxOffset);
+			heroBanner.style.transform = `translateY(${offset}px)`;
 			ticking = false;
 		};
 
@@ -227,24 +261,21 @@ const faqs = [
 </script>
 
 <style>
-	section {
-		margin-bottom: 4rem;
+	.hero {
+		position: relative;
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+		min-height: min(72vh, 560px);
 	}
 
-	.hero {
-		--overlay-fade: 70%;
-		position: relative;
-		width: 100vw;
-		margin-left: calc(50% - 50vw);
-		margin-right: calc(50% - 50vw);
-		margin-top: -3em;
-	}
 	.hero-media {
 		position: absolute;
 		inset: 0;
 		overflow: hidden;
 		z-index: 0;
 	}
+
 	.hero-banner {
 		position: absolute;
 		top: -15%;
@@ -253,309 +284,84 @@ const faqs = [
 		height: 130%;
 		object-fit: cover;
 		object-position: 25% center;
-		border-radius: 0;
 		will-change: transform;
 	}
+
 	.hero-media::after {
 		content: '';
 		position: absolute;
 		inset: 0;
 		background: linear-gradient(
 			90deg,
-			rgba(0, 0, 0, 0.65) 0%,
-			rgba(0, 0, 0, 0.5) 30%,
-			rgba(0, 0, 0, 0.2) calc(var(--overlay-fade) - 20%),
-			rgba(0, 0, 0, 0) var(--overlay-fade)
-		);
-	}
-	.hero::before {
-		content: '';
-		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: -30px;
-		height: 70px;
-		background: radial-gradient(
-			ellipse at center,
-			rgba(35, 55, 255, 0.22),
-			rgba(168, 85, 247, 0.12) 45%,
+			color-mix(in srgb, var(--color-ink) 75%, transparent) 0%,
+			color-mix(in srgb, var(--color-ink) 45%, transparent) 35%,
 			transparent 75%
 		);
-		filter: blur(20px);
-		pointer-events: none;
 	}
+
 	.hero-content {
 		position: relative;
 		z-index: 2;
-		text-align: left;
-		padding: 5rem 2rem;
+		padding: 4rem 1.5rem;
 		max-width: 640px;
 	}
+
 	.hero h1 {
+		color: var(--color-light);
 		max-width: 560px;
-		margin: 0 0 0.75rem;
-		color: white;
 	}
-	.lede {
-		max-width: 640px;
-		margin: 0 0 1.5rem;
-		font-size: 1.15rem;
-		color: rgb(var(--gray-dark));
+
+	.hero .lede {
+		color: color-mix(in srgb, var(--color-light) 90%, transparent);
+		max-width: 560px;
 	}
-	.hero-content .lede {
-		margin-left: 0;
-		color: rgba(255, 255, 255, 0.9);
-	}
+
 	.hero-actions {
-		display: flex;
-		gap: 1rem;
-		justify-content: flex-start;
-		flex-wrap: wrap;
+		margin-top: 1.5rem;
 	}
 
-	.button {
-		display: inline-block;
-		padding: 0.75em 1.5em;
-		border-radius: 999px;
-		background: var(--accent);
-		color: white;
-		font-weight: 700;
-		text-decoration: none;
-		border: 2px solid transparent;
-		transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease,
-			transform 0.2s ease, box-shadow 0.2s ease;
-	}
-	.button:hover {
-		background: var(--accent-dark);
-		color: white;
-		transform: translateY(-2px);
-	}
-	.button-outline {
-		background: transparent;
-		color: var(--accent);
-		border: 2px solid var(--accent);
-	}
-	.button-outline:hover {
-		background: var(--accent);
-		color: white;
-		transform: translateY(-2px);
-	}
-
-	.hero-actions .button {
-		background: white;
-		color: var(--accent-dark);
-		border-color: white;
-		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-	}
-	.hero-actions .button:hover {
-		background: var(--accent);
-		color: white;
-		border-color: var(--accent);
-		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-	}
-	.hero-actions .button-outline {
-		background: rgba(255, 255, 255, 0.1);
-		color: white;
-		border-color: rgba(255, 255, 255, 0.75);
-		backdrop-filter: blur(6px);
-		-webkit-backdrop-filter: blur(6px);
-	}
-	.hero-actions .button-outline:hover {
-		background: white;
-		color: var(--accent-dark);
-		border-color: white;
-		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-	}
-
-	h2 {
-		text-align: center;
-		margin-bottom: 1.5rem;
-	}
-
-	.why-opus-list {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-		gap: 1.25rem;
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
-	.why-opus-list li {
-		padding: 1.25rem;
-		border-radius: 14px;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 4%);
-		font-size: 0.95rem;
-		color: rgb(var(--gray-dark));
-	}
-
-	.instrument-pills {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.6rem;
-		justify-content: center;
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
-	.instrument-pills a {
-		display: inline-block;
-		padding: 0.5em 1.1em;
-		border-radius: 999px;
-		background: white;
-		border: 1px solid rgba(var(--gray), 20%);
-		font-weight: 600;
-		color: inherit;
-		text-decoration: none;
-		transition: border-color 0.15s ease, color 0.15s ease;
-	}
-	.instrument-pills a:hover {
-		border-color: var(--accent);
-		color: var(--accent);
-	}
-
-	.program-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-		gap: 1.25rem;
-	}
-	.program-card {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		padding: 1.5rem;
-		border-radius: 14px;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 4%);
-		text-decoration: none;
-		color: inherit;
-		transition: box-shadow 0.2s ease, transform 0.2s ease;
-	}
-	.program-card:hover {
-		box-shadow: 0 8px 20px rgba(var(--black), 8%);
-		transform: translateY(-2px);
-	}
-	.program-card h3 {
-		margin: 0;
-		color: var(--black);
-	}
-	.program-card p {
-		margin: 0;
-		font-size: 0.95rem;
-		color: rgb(var(--gray));
-		flex-grow: 1;
-	}
-	.learn-more {
-		font-weight: 700;
-		color: var(--accent);
-		text-decoration: none;
-	}
-
-	.location-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-		gap: 1.25rem;
-	}
-	.location-card {
-		padding: 1.5rem;
-		border-radius: 14px;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 4%);
-	}
-	.location-card h3 {
-		margin-top: 0;
-	}
-	.location-card .detail {
-		margin: 0.25rem 0;
-		color: rgb(var(--gray-dark));
-	}
-	.hours {
-		list-style: none;
-		margin: 0.75rem 0;
-		padding: 0;
-		font-size: 0.9rem;
-		color: rgb(var(--gray));
-	}
-	.hours li {
-		margin-bottom: 0.15rem;
-	}
-
-	.faq-list {
-		display: flex;
-		flex-direction: column;
-		gap: 0.75rem;
-		max-width: 720px;
+	.sheet {
+		max-width: 900px;
 		margin: 0 auto;
 	}
-	.faq-item {
-		padding: 1rem 1.25rem;
-		border-radius: 12px;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 4%);
+
+	.sheet .section {
+		padding-block: 2rem;
 	}
-	.faq-item summary {
-		cursor: pointer;
-		font-weight: 600;
-		list-style: none;
+
+	.sheet .staff {
+		margin-block: 0;
 	}
-	.faq-item summary::-webkit-details-marker {
-		display: none;
-	}
-	.faq-item summary::before {
-		content: '▸';
-		display: inline-block;
-		margin-right: 0.5em;
-		transition: transform 0.15s ease;
-	}
-	.faq-item[open] summary::before {
-		transform: rotate(90deg);
-	}
-	.faq-item p {
-		margin: 0.75rem 0 0;
-		color: rgb(var(--gray-dark));
+
+	.sheet h2 {
+		text-align: center;
 	}
 
 	.cta-banner {
 		text-align: center;
 		padding: 3rem 2rem;
-		border-radius: 20px;
-		background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-		color: white;
-	}
-	.cta-banner h2 {
-		color: white;
-	}
-	.cta-banner p {
-		max-width: 520px;
-		margin: 0 auto 1.5rem;
-	}
-	.cta-banner .button {
-		background: white;
-		color: var(--accent-dark);
-	}
-	.cta-banner .button:hover {
-		background: rgb(var(--gray-light));
-		color: var(--accent-dark);
+		border-radius: var(--radius);
+		background: var(--accent);
+		color: var(--color-light);
 	}
 
-	@media (max-width: 900px) {
-		.hero {
-			--overlay-fade: 88%;
-		}
+	.cta-banner h2 {
+		color: var(--color-light);
+	}
+
+	.cta-banner .button {
+		background: var(--color-light);
+		border-color: var(--color-light);
+		color: var(--accent);
 	}
 
 	@media (max-width: 640px) {
+		.hero {
+			min-height: min(60vh, 460px);
+		}
 		.hero-content {
-			padding: 3rem 1.25rem;
-		}
-		.hero {
-			--overlay-fade: 100%;
-		}
-	}
-
-	@media (max-width: 720px) {
-		.hero {
-			margin-top: -1em;
+			padding: 2.5rem 1.25rem;
 		}
 	}
 </style>
+

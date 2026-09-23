@@ -20,17 +20,17 @@ const galleries = await sanityClient.fetch(GALLERIES_QUERY);
 	</head>
 	<body>
 		<Header />
-		<main class="content-page">
+		<main class="container">
 			<h1>Galleries</h1>
-			{galleries.length === 0 && <p class="empty">Galleries will show up here once photos are added.</p>}
-			<div class="gallery-grid">
+			{galleries.length === 0 && <p class="muted">Galleries will show up here once photos are added.</p>}
+			<div class="grid">
 				{
 					galleries.map((gallery) => (
-						<a class="card gallery-card" href={`/galleries/${gallery.slug.current}/`}>
+						<a class="card" href={`/galleries/${gallery.slug.current}/`}>
 							{gallery.cover ? (
 								<img src={urlFor(gallery.cover).width(500).height(350).url()} alt={gallery.cover.alt ?? ''} />
 							) : (
-								<div class="gallery-cover-placeholder" aria-hidden="true" />
+								<div class="cover-placeholder" aria-hidden="true" />
 							)}
 							<h2>{gallery.title}</h2>
 						</a>
@@ -43,41 +43,9 @@ const galleries = await sanityClient.fetch(GALLERIES_QUERY);
 </html>
 
 <style>
-	.empty {
-		color: rgb(var(--gray));
-	}
-	.gallery-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-		gap: 1.25rem;
-	}
-	.gallery-card {
-		display: flex;
-		flex-direction: column;
-		gap: 0.75rem;
-		padding: 0.75rem;
-		text-decoration: none;
-		color: inherit;
-		transition: box-shadow 0.2s ease, transform 0.2s ease;
-	}
-	.gallery-card:hover {
-		box-shadow: 0 8px 20px rgba(var(--black), 8%);
-		transform: translateY(-2px);
-	}
-	.gallery-card img {
-		border-radius: 10px;
-		width: 100%;
+	.cover-placeholder {
 		aspect-ratio: 10 / 7;
-		object-fit: cover;
-	}
-	.gallery-cover-placeholder {
-		border-radius: 10px;
-		width: 100%;
-		aspect-ratio: 10 / 7;
-		background: rgb(var(--gray-light));
-	}
-	.gallery-card h2 {
-		margin: 0;
-		font-size: 1.15rem;
+		border-radius: var(--radius);
+		background: var(--color-staff);
 	}
 </style>

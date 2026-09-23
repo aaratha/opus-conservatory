@@ -36,11 +36,11 @@ if (!event) throw new Error(`Event not found: ${slug}`);
 	</head>
 	<body>
 		<Header />
-		<main class="content-page">
+		<main class="container">
 			<article>
-				{event.coverImage && <img src={urlFor(event.coverImage).width(1000).url()} alt="" class="cover" />}
+				{event.coverImage && <img src={urlFor(event.coverImage).width(1000).url()} alt="" />}
 				<h1>{event.title}</h1>
-				<p class="event-meta">
+				<p class="muted">
 					<FormattedDate date={new Date(event.startDateTime)} />
 					{event.endDateTime && <> – <FormattedDate date={new Date(event.endDateTime)} /></>}
 					{event.location && <> · {event.location}</>}
@@ -73,12 +73,8 @@ if (!event) throw new Error(`Event not found: ${slug}`);
 </html>
 
 <style>
-	.cover {
-		border-radius: 12px;
+	article > img {
+		border-radius: var(--radius);
 		margin-bottom: 1.5rem;
-	}
-	.event-meta {
-		color: rgb(var(--gray));
-		font-weight: 600;
 	}
 </style>

@@ -60,7 +60,7 @@ const locations = await sanityClient.fetch(FOOTER_LOCATIONS_QUERY).catch(() => [
 							<a href={`tel:${loc.phone.replace(/[^\d+]/g, '')}`}>{loc.phone}</a>
 						</p>
 					)}
-					<a class="location-link" href={`/instructors?location=${loc.slug.current}`}>
+					<a class="link-arrow" href={`/instructors?location=${loc.slug.current}`}>
 						{loc.name} instructors &rarr;
 					</a>
 				</div>
@@ -70,11 +70,13 @@ const locations = await sanityClient.fetch(FOOTER_LOCATIONS_QUERY).catch(() => [
 
 	<div class="footer-bottom">&copy; {today.getFullYear()} Opus Conservatory. All rights reserved.</div>
 </footer>
+
 <style>
 	footer {
-		padding: 3em 1em 6em 1em;
-		background: linear-gradient(var(--gray-gradient)) no-repeat;
-		color: rgb(var(--gray));
+		padding: 3rem 1.25rem 4rem;
+		background: var(--color-light);
+		border-top: 1px solid var(--color-staff);
+		color: var(--color-ink);
 	}
 	.footer-grid {
 		display: grid;
@@ -85,11 +87,7 @@ const locations = await sanityClient.fetch(FOOTER_LOCATIONS_QUERY).catch(() => [
 	}
 	.footer-col h3 {
 		font-size: 1rem;
-		color: rgb(var(--gray-dark));
 		margin-bottom: 0.75rem;
-	}
-	.footer-col p {
-		margin: 0 0 0.4rem;
 	}
 	.footer-col ul {
 		list-style: none;
@@ -100,7 +98,7 @@ const locations = await sanityClient.fetch(FOOTER_LOCATIONS_QUERY).catch(() => [
 		gap: 0.5rem;
 	}
 	.footer-col a {
-		color: rgb(var(--gray));
+		color: var(--color-ink);
 		text-decoration: none;
 	}
 	.footer-col a:hover {
@@ -109,29 +107,22 @@ const locations = await sanityClient.fetch(FOOTER_LOCATIONS_QUERY).catch(() => [
 	.tagline {
 		font-size: 0.9rem;
 	}
-	.location-link {
-		display: inline-block;
-		margin-top: 0.4rem;
-		font-weight: 600;
-		color: var(--accent) !important;
-	}
 	.social-links {
 		display: flex;
 		gap: 1em;
 		margin-top: 1em;
 	}
 	.social-links a {
-		text-decoration: none;
-		color: rgb(var(--gray));
+		color: var(--color-ink);
 	}
 	.social-links a:hover {
-		color: rgb(var(--gray-dark));
+		color: var(--accent);
 	}
 	.footer-bottom {
 		max-width: 1080px;
 		margin: 2.5rem auto 0;
 		padding-top: 1.5rem;
-		border-top: 1px solid rgba(var(--gray), 20%);
+		border-top: 1px solid var(--color-staff);
 		font-size: 0.85rem;
 		text-align: center;
 	}

@@ -25,7 +25,7 @@ const weeks = [
 	</head>
 	<body>
 		<Header />
-		<main class="content-page">
+		<main class="container">
 			<h1>Summer Camp</h1>
 			<p class="lede">Students of all abilities are welcome to attend any and all sessions.</p>
 
@@ -36,7 +36,7 @@ const weeks = [
 			</p>
 
 			<h2>Weekly Themes</h2>
-			<ul class="week-list">
+			<ul class="grid grid-sm">
 				{weeks.map((week) => <li><strong>{week.dates}:</strong> {week.theme}</li>)}
 			</ul>
 
@@ -47,21 +47,10 @@ const weeks = [
 				<a href="tel:5712442852">571-244-2852</a>
 			</p>
 
-			<div class="button-row">
+			<div class="cluster">
 				<a class="button" href="mailto:opusconservatory@gmail.com">Email to Register</a>
 			</div>
 		</main>
 		<Footer />
 	</body>
 </html>
-
-<style>
-	.week-list {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-		gap: 0.5rem 1.5rem;
-		list-style: disc;
-		padding-left: 1.25rem;
-		margin: 0 0 2rem;
-	}
-</style>
