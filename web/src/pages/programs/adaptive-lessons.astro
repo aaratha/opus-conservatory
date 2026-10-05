@@ -41,15 +41,16 @@ const description = 'Individualized music instruction for students with disabili
 			</p>
 
 			<h2>Areas of study</h2>
-			<ul>
-				<li>Piano</li>
-				<li>Guitar</li>
-				<li>Voice</li>
-				<li>Ukulele</li>
-				<li>Hand percussion</li>
-				<li>Music theory</li>
-				<li>Composition</li>
-				<li>Improvisation</li>
+			<ul class="cluster">
+				{
+					['Piano', 'Guitar', 'Voice', 'Ukulele', 'Hand Percussion', 'Music Theory', 'Composition', 'Improvisation'].map(
+						(area) => (
+							<li>
+								<span class="tag">{area}</span>
+							</li>
+						)
+					)
+				}
 			</ul>
 
 			<p>

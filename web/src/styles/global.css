@@ -1,44 +1,37 @@
 :root {
-	--color-paper: #f4ebdd;
-	--color-light: #faf7f0;
-	--color-ink: #24201c;
-	--color-staff: #b8ada0;
+	/* parchment palette — archived, not currently in use */
+	--palette-parchment-paper: #f4ebdd;
+	--palette-parchment-light: #faf7f0;
+	--palette-parchment-ink: #24201c;
+	--palette-parchment-staff: #b8ada0;
+	--palette-parchment-piano: #713d3a;
+	--palette-parchment-voice: #a85f52;
+	--palette-parchment-strings: #65705b;
+	--palette-parchment-guitar: #647a82;
+	--palette-parchment-brass: #c49a52;
+	--palette-parchment-digital: #4e596b;
+	--palette-parchment-community: #8b7460;
 
-	--color-piano: #713d3a;
-	--color-voice: #a85f52;
-	--color-strings: #65705b;
-	--color-guitar: #647a82;
-	--color-brass: #c49a52;
-	--color-digital: #4e596b;
-	--color-community: #8b7460;
+	/* original-site palette */
+	--palette-original-white: #ffffff;
+	--palette-original-black: #000000;
+	--palette-original-gray: #333333;
+	--palette-original-blue: #0071ce;
+	--palette-original-pink: #ee509c;
 
-	--accent: var(--color-piano);
-	--radius: 10px;
+	/* active theme */
+	--color-paper: var(--palette-original-white);
+	--color-light: var(--palette-original-white);
+	--color-ink: var(--palette-original-gray);
+	--color-staff: #d6d6d6;
+	--color-heading: var(--palette-original-blue);
+
+	--accent: var(--palette-original-pink);
+	--radius: 0px;
 
 	--font-serif: var(--font-garamond), Georgia, serif;
 	--font-sans: var(--font-manrope), sans-serif;
-}
-
-.accent-piano {
-	--accent: var(--color-piano);
-}
-.accent-voice {
-	--accent: var(--color-voice);
-}
-.accent-strings {
-	--accent: var(--color-strings);
-}
-.accent-guitar {
-	--accent: var(--color-guitar);
-}
-.accent-brass {
-	--accent: var(--color-brass);
-}
-.accent-digital {
-	--accent: var(--color-digital);
-}
-.accent-community {
-	--accent: var(--color-community);
+	--font-heading: var(--font-montserrat), Helvetica, Arial, sans-serif;
 }
 
 *,
@@ -62,10 +55,33 @@ h4,
 h5,
 h6 {
 	margin: 0 0 0.5em;
-	font-family: var(--font-serif);
-	font-weight: 600;
+	font-family: var(--font-heading);
+	font-weight: 700;
 	line-height: 1.2;
-	color: var(--color-ink);
+	color: var(--color-heading);
+}
+
+h1,
+h2 {
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: 0.01em;
+}
+
+h1 {
+	font-size: clamp(2.25rem, 1.5rem + 3vw, 3.5rem);
+}
+
+h2 {
+	font-size: clamp(1.75rem, 1.25rem + 2vw, 2.75rem);
+}
+
+h3 {
+	font-size: 1.5rem;
+}
+
+h4 {
+	font-size: 1.25rem;
 }
 
 p {
@@ -87,9 +103,8 @@ hr {
 }
 
 .lede {
-	font-family: var(--font-serif);
-	font-style: italic;
 	font-size: 1.2rem;
+	font-weight: 500;
 	color: color-mix(in srgb, var(--color-ink) 75%, var(--color-paper));
 }
 
@@ -167,11 +182,14 @@ hr {
 .button {
 	display: inline-block;
 	padding: 0.7em 1.5em;
-	border-radius: 999px;
+	border-radius: var(--radius);
 	background: var(--accent);
 	border: 2px solid var(--accent);
 	color: var(--color-light);
+	font-family: var(--font-heading);
 	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.02em;
 	text-decoration: none;
 }
 

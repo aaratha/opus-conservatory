@@ -1,0 +1,90 @@
+---
+interface Props {
+	keys?: number;
+}
+
+const { keys: totalWhiteKeys = 12 } = Astro.props;
+
+const whiteNotes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+const hasBlackAfter: Record<string, boolean> = {
+	C: true,
+	D: true,
+	E: false,
+	F: true,
+	G: true,
+	A: true,
+	B: false,
+};
+
+const whiteKeyWidth = 100 / totalWhiteKeys;
+const blackKeyWidth = whiteKeyWidth * 0.58;
+
+const whiteKeys = Array.from({ length: totalWhiteKeys });
+
+const blackKeys: { left: number }[] = [];
+for (let i = 0; i < totalWhiteKeys; i++) {
+	const note = whiteNotes[i % whiteNotes.length];
+	if (hasBlackAfter[note]) {
+		const boundary = (i + 1) * whiteKeyWidth;
+		blackKeys.push({ left: boundary - blackKeyWidth / 2 });
+	}
+}
+---
+
+<div class="piano" aria-hidden="true">
+	<div class="piano-white-keys">
+		{whiteKeys.map(() => <div class="piano-key piano-key-white" />)}
+	</div>
+	<div class="piano-black-keys">
+		{
+			blackKeys.map((key) => (
+				<div class="piano-key piano-key-black" style={`left: ${key.left}%; width: ${blackKeyWidth}%;`} />
+			))
+		}
+	</div>
+</div>
+
+<style>
+	.piano {
+		position: relative;
+		max-width: 900px;
+		margin-inline: auto;
+		height: clamp(220px, 30vw, 420px);
+		background: var(--color-paper);
+		border-top: 3px solid var(--color-heading);
+		border-bottom: 3px solid var(--color-heading);
+	}
+
+	.piano-white-keys {
+		display: flex;
+		width: 100%;
+		height: 100%;
+	}
+
+	.piano-key-white {
+		flex: 1 0 auto;
+		height: 100%;
+		background: var(--color-paper);
+		border-right: 2px solid var(--color-heading);
+	}
+
+	.piano-key-white:first-child {
+		border-left: none;
+	}
+
+	.piano-black-keys {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 62%;
+		pointer-events: none;
+	}
+
+	.piano-key-black {
+		position: absolute;
+		top: 0;
+		height: 100%;
+		background: var(--color-heading);
+	}
+</style>

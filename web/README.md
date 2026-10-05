@@ -7,4 +7,3 @@ This project is a monorepo containing the website, mobile app, and Sanity studio
 - Astro, React
 - TypeScript, HTML, CSS, Markdown
 - Sanity CMS (Studio)
- ff

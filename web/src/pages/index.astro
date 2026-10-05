@@ -3,9 +3,14 @@ import { Image } from 'astro:assets';
 import { defineQuery } from 'groq';
 import { sanityClient } from 'sanity:client';
 import HeroImage from '../assets/hero-piano.jpeg';
+import MosaicCalendar from '../assets/mosaic-calendar.jpg';
+import MosaicGuitar from '../assets/mosaic-guitar.jpg';
+import MosaicKeys from '../assets/mosaic-keys.jpg';
+import MosaicPastEvents from '../assets/mosaic-past-events.jpg';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import Piano from '../components/Piano.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { slugify } from '../lib/slugify';
 
@@ -112,93 +117,137 @@ const faqs = [
 				</div>
 			</section>
 
-			<div class="sheet">
-				<div class="staff"></div>
+			{/* <Piano keys={12} /> */}
 
-				<section class="section">
-					<div class="container">
+			<section class="mosaic" style="--cols: 2">
+				<div class="mosaic-cell">
+					<div>
 						<h2>Why choose Opus?</h2>
-						<ul class="grid">
-							{whyOpus.map((point) => <li class="card">{point}</li>)}
+						<ul>
+							{whyOpus.map((point) => <li>{point}</li>)}
 						</ul>
 					</div>
-				</section>
+				</div>
+				<div
+					class="mosaic-cell mosaic-cell--image"
+					style={`background-image: url(${MosaicKeys.src}); background-position: center;`}
+				>
+					<p>
+						Explore personalized music education with talented instructors, for all ages at our
+						RCM-certified school.
+					</p>
+				</div>
+			</section>
 
-				<div class="staff"></div>
+			<section class="mosaic" style="--cols: 3">
+				{
+					programs.slice(0, 3).map((program, i) => (
+						<a
+							class={`mosaic-cell ${i % 2 === 0 ? 'mosaic-cell--blue-light' : 'mosaic-cell--blue'}`}
+							href={program.href}
+						>
+							<h3>{program.title}</h3>
+						</a>
+					))
+				}
+			</section>
 
-				<section class="section">
-					<div class="container">
-						<h2>Instruments we teach</h2>
-						<ul class="cluster">
+			<section class="mosaic" style="--cols: 3">
+				<div class="mosaic-cell mosaic-cell--blue">
+					<div>
+						<h2>A place</h2>
+						<p>
+							where every student is unique in their own way, and so are our teaching styles and
+							methodology.
+						</p>
+					</div>
+				</div>
+				<a
+					class="mosaic-cell mosaic-cell--image"
+					href="/events"
+					style={`background-image: url(${MosaicCalendar.src}); background-position: 20% 25%;`}
+				>
+					<span class="button">Calendar</span>
+				</a>
+				<a class="mosaic-cell mosaic-cell--black" href="/about">
+					<div>
+						<h2>Since 2008</h2>
+						<span class="button">Our Story</span>
+					</div>
+				</a>
+			</section>
+
+			<section class="mosaic" style="--cols: 2">
+				{
+					locations.length > 0 ? (
+						locations.map((loc) => (
+							<div class="mosaic-cell mosaic-cell--blue-light">
+								<div>
+									<h3>{loc.name}</h3>
+									{loc.address && <p>{loc.address}</p>}
+									{loc.phone && (
+										<p>
+											<a href={`tel:${loc.phone.replace(/[^\d+]/g, '')}`}>{loc.phone}</a>
+										</p>
+									)}
+									{loc.hours && loc.hours.length > 0 && (
+										<p>{loc.hours.join(' · ')}</p>
+									)}
+									<a class="button" href={`/instructors/?location=${loc.slug.current}`}>
+										Our Instructors
+									</a>
+								</div>
+							</div>
+						))
+					) : (
+						<p>Studio locations are managed in Sanity — add a "Location" entry to show it here.</p>
+					)
+				}
+			</section>
+
+			<section class="mosaic" style="--cols: 3">
+				<div
+					class="mosaic-cell mosaic-cell--image"
+					style={`background-image: url(${MosaicGuitar.src}); background-position: center 45%;`}
+				/>
+				<div class="mosaic-cell">
+					<div>
+						<h2>Our instruments</h2>
+						<ul>
 							{
 								instruments.map((instrument) => (
 									<li>
-										<a class="tag" href={`/instructors/?instrument=${slugify(instrument)}`}>
-											{instrument}
-										</a>
+										<a href={`/instructors/?instrument=${slugify(instrument)}`}>{instrument}</a>
 									</li>
 								))
 							}
 						</ul>
 					</div>
-				</section>
+				</div>
+				<div
+					class="mosaic-cell mosaic-cell--image"
+					style={`background-image: url(${MosaicGuitar.src}); background-position: center 45%;`}
+				/>
+			</section>
 
-				<div class="staff"></div>
-
-				<section class="section">
-					<div class="container">
-						<h2>Programs</h2>
-						<div class="grid">
-							{
-								programs.map((program) => (
-									<a class="card" href={program.href}>
-										<h3>{program.title}</h3>
-										<p>{program.blurb}</p>
-										<span class="link-arrow">Learn more &rarr;</span>
-									</a>
-								))
-							}
-						</div>
+			<section class="mosaic" style="--cols: 2">
+				<a
+					class="mosaic-cell mosaic-cell--image"
+					href="/events"
+					style={`background-image: url(${MosaicPastEvents.src}); background-position: center 35%;`}
+				>
+					<h3>Past Events</h3>
+				</a>
+				<a class="mosaic-cell mosaic-cell--blue" href="/free-trial">
+					<div>
+						<h2>Enrollment</h2>
+						<p>Book your first lesson today.</p>
+						<span class="button">Free Trial</span>
 					</div>
-				</section>
+				</a>
+			</section>
 
-				<div class="staff"></div>
-
-				<section class="section">
-					<div class="container">
-						<h2>Our studios</h2>
-						<div class="grid">
-							{
-								locations.length > 0 ? (
-									locations.map((loc) => (
-										<div class="card">
-											<h3>{loc.name}</h3>
-											{loc.address && <p class="muted">{loc.address}</p>}
-											{loc.phone && (
-												<p class="muted">
-													<a href={`tel:${loc.phone.replace(/[^\d+]/g, '')}`}>{loc.phone}</a>
-												</p>
-											)}
-											{loc.hours && loc.hours.length > 0 && (
-												<ul class="muted">
-													{loc.hours.map((line) => <li>{line}</li>)}
-												</ul>
-											)}
-											<a class="link-arrow" href={`/instructors/?location=${loc.slug.current}`}>
-												See {loc.name} instructors &rarr;
-											</a>
-										</div>
-									))
-								) : (
-									<p>Studio locations are managed in Sanity — add a "Location" entry to show it here.</p>
-								)
-							}
-						</div>
-					</div>
-				</section>
-
-				<div class="staff"></div>
-
+			<div class="sheet">
 				<section class="section">
 					<div class="container">
 						<h2>Frequently asked questions</h2>
@@ -214,8 +263,6 @@ const faqs = [
 						</div>
 					</div>
 				</section>
-
-				<div class="staff"></div>
 
 				<section class="section">
 					<div class="container">
@@ -318,6 +365,92 @@ const faqs = [
 
 	.hero-actions {
 		margin-top: 1.5rem;
+	}
+
+	.mosaic {
+		display: grid;
+		grid-template-columns: repeat(var(--cols, 2), 1fr);
+		gap: 1rem;
+		padding-inline: 1rem;
+		margin-top: 1rem;
+	}
+
+	.mosaic-cell {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 320px;
+		padding: 2.5rem;
+		text-align: center;
+		color: inherit;
+		text-decoration: none;
+		overflow: hidden;
+		border-radius: 1rem;
+	}
+
+	.mosaic-cell > * {
+		position: relative;
+		z-index: 1;
+	}
+
+	.mosaic-cell h2,
+	.mosaic-cell h3 {
+		color: inherit;
+	}
+
+	.mosaic-cell p,
+	.mosaic-cell li {
+		font-size: 1.15rem;
+	}
+
+	.mosaic-cell ul {
+		margin: 0;
+		padding-left: 1.2em;
+		text-align: left;
+	}
+
+	.mosaic-cell ul a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.mosaic-cell--blue {
+		background: var(--color-heading);
+		color: var(--color-light);
+	}
+
+	.mosaic-cell--blue-light {
+		background: color-mix(in srgb, var(--color-heading) 35%, white);
+		color: var(--color-heading);
+	}
+
+	.mosaic-cell--black {
+		background: var(--palette-original-black);
+		color: var(--color-light);
+	}
+
+	.mosaic-cell--image {
+		background-size: cover;
+		background-position: center;
+		background-attachment: fixed;
+		color: var(--color-light);
+	}
+
+	.mosaic-cell--image::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: color-mix(in srgb, var(--palette-original-black) 45%, transparent);
+	}
+
+	@media (max-width: 720px) {
+		.mosaic {
+			grid-template-columns: 1fr;
+		}
+		.mosaic-cell--image {
+			background-attachment: scroll;
+		}
 	}
 
 	.sheet {
