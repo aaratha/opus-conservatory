@@ -3,6 +3,8 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
+    "@sanity/client": "^8.6.1",
+    "@sanity/image-url": "^2.1.1",
     "expo": "~57.0.18",
     "expo-constants": "~57.0.16",
     "expo-font": "~57.0.2",

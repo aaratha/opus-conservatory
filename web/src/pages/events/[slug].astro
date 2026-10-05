@@ -17,7 +17,11 @@ export async function getStaticPaths() {
 
 const EVENT_QUERY = defineQuery(
 	`*[_type == "event" && slug.current == $slug][0]{
-		title, startDateTime, endDateTime, location, coverImage, description,
+		title, startDateTime, endDateTime, coverImage, description,
+		"location": select(
+			location[0]._type == "reference" => location[0]->name,
+			location[0]._type == "customLocation" => location[0].value
+		),
 		instructors[]->{ _id, name },
 		gallery->{ _id, "slug": slug.current }
 	}`

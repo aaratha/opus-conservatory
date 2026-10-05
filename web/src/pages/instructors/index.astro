@@ -9,7 +9,12 @@ import { slugify } from '../../lib/slugify';
 import { urlFor } from '../../lib/sanity';
 
 const INSTRUCTORS_QUERY = defineQuery(
-	`*[_type == "instructor"] | order(name asc){ _id, name, title, photo, instruments, bio, email, locations[]->{ _id, name, slug } }`
+	`*[_type == "instructor"] | order(name asc){ _id, name, title, photo, instruments, bio, email,
+		locations[]{
+			"name": select(_type == "reference" => @->name, _type == "customLocation" => value),
+			"slug": select(_type == "reference" => @->slug.current, _type == "customLocation" => value)
+		}
+	}`
 );
 const INSTRUCTORS_PAGE_LOCATIONS_QUERY = defineQuery(
 	`*[_type == "location"] | order(name asc){ _id, name, slug, address, phone, hours }`
@@ -102,7 +107,7 @@ const instruments = [...instrumentNamesBySlug.entries()]
 					instructors.map((instructor) => (
 						<li
 							class="card instructor-card"
-							data-locations={instructor.locations?.map((loc) => loc.slug.current).join(' ') ?? ''}
+							data-locations={instructor.locations?.map((loc) => loc.slug).join(' ') ?? ''}
 							data-instruments={instructor.instruments?.map((name) => slugify(name)).join(' ') ?? ''}
 						>
 							<div class="instructor-bio">

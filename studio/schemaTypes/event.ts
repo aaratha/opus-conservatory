@@ -39,7 +39,25 @@ export const event = defineType({
     }),
     defineField({
       name: 'location',
-      type: 'string',
+      type: 'array',
+      of: [
+        defineArrayMember({type: 'reference', to: [{type: 'location'}], title: 'Location'}),
+        defineArrayMember({
+          type: 'object',
+          name: 'customLocation',
+          title: 'Custom location',
+          fields: [
+            defineField({
+              name: 'value',
+              title: 'Location name',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+          ],
+          preview: {select: {title: 'value'}},
+        }),
+      ],
+      validation: (rule) => rule.max(1),
     }),
     defineField({
       name: 'coverImage',

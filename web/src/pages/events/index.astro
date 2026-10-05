@@ -7,7 +7,12 @@ import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
 
 const EVENTS_QUERY = defineQuery(
-	`*[_type == "event" && defined(slug.current)] | order(startDateTime asc){ _id, title, slug, startDateTime, location }`
+	`*[_type == "event" && defined(slug.current)] | order(startDateTime asc){ _id, title, slug, startDateTime,
+		"location": select(
+			location[0]._type == "reference" => location[0]->name,
+			location[0]._type == "customLocation" => location[0].value
+		)
+	}`
 );
 
 const events = await sanityClient.fetch(EVENTS_QUERY);
