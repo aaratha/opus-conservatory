@@ -1,5 +1,6 @@
 import { ActivityIndicator, Text, View } from 'react-native';
 
+import { NoteIcon } from '@/components/icons/NoteIcons';
 import { useAppStyles } from '@/components/useAppStyles';
 import { useHomeNotices } from '@/lib/useHomeNotices';
 
@@ -49,7 +50,10 @@ export function NoticesSection() {
           ))}
 
           {!nextEvent && notices.length === 0 && (
-            <Text style={styles.textMuted}>No notices right now — check back soon.</Text>
+            <View style={[styles.rowStart]}>
+              <NoteIcon name="eighth" size={22} color={colors.muted} />
+              <Text style={styles.textMuted}>No notices right now — check back soon.</Text>
+            </View>
           )}
         </View>
       )}

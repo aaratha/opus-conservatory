@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useAppStyles } from '@/components/useAppStyles';
-import { fontSize } from '@/constants/theme';
 
 function formatElapsed(totalSeconds: number) {
   const minutes = Math.floor(totalSeconds / 60)
@@ -34,7 +33,7 @@ export function StopwatchMode() {
 
   return (
     <View style={[styles.card, local.card]}>
-      <Text style={[styles.text, local.display]}>{formatElapsed(elapsedSeconds)}</Text>
+      <Text style={styles.displayNumber}>{formatElapsed(elapsedSeconds)}</Text>
       <View style={local.controls}>
         <Pressable
           onPress={() => setIsRunning((prev) => !prev)}
@@ -58,10 +57,6 @@ const local = StyleSheet.create({
   card: {
     alignItems: 'center',
     paddingVertical: 40,
-  },
-  display: {
-    fontSize: fontSize.display,
-    fontWeight: '600',
   },
   controls: {
     flexDirection: 'row',

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from 'react-native';
 
 import { Avatar } from '@/components/Avatar';
+import { NoteIcon } from '@/components/icons/NoteIcons';
 import { useAppStyles } from '@/components/useAppStyles';
 import { plainTextFromBio, urlFor, type Instructor } from '@/lib/sanity';
 import { useInstructors } from '@/lib/useInstructors';
@@ -55,7 +56,7 @@ function InstructorCard({ instructor }: { instructor: Instructor }) {
 }
 
 export default function InstructorsScreen() {
-  const { styles } = useAppStyles();
+  const { styles, colors } = useAppStyles();
   const { instructors, locations, loading, error } = useInstructors();
   const [locationFilter, setLocationFilter] = useState<string | null>(null);
 
@@ -114,7 +115,10 @@ export default function InstructorsScreen() {
       )}
 
       {filtered.length === 0 && (
-        <Text style={styles.textMuted}>No instructors match these filters yet.</Text>
+        <View style={[styles.rowStart, { paddingVertical: 24 }]}>
+          <NoteIcon name="half" size={28} color={colors.muted} />
+          <Text style={styles.textMuted}>No instructors match these filters yet.</Text>
+        </View>
       )}
 
       {filtered.map((instructor) => (

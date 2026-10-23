@@ -1,6 +1,7 @@
 import { Link } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 
+import { ScribbleStar } from '@/components/scribble/Scribble';
 import { useAppStyles } from '@/components/useAppStyles';
 
 const catalog = [
@@ -10,7 +11,7 @@ const catalog = [
 ];
 
 export function CatalogSection() {
-  const { styles } = useAppStyles();
+  const { styles, colors } = useAppStyles();
 
   return (
     <View style={styles.section}>
@@ -18,7 +19,12 @@ export function CatalogSection() {
       <View style={styles.section}>
         {catalog.map((program) => (
           <View key={program.id} style={[styles.card, program.popular && styles.cardHighlight]}>
-            {program.popular ? <Text style={styles.eyebrow}>Most popular</Text> : null}
+            {program.popular ? (
+              <View style={styles.rowStart}>
+                <ScribbleStar color={colors.secondary} size={16} />
+                <Text style={styles.eyebrow}>Most popular</Text>
+              </View>
+            ) : null}
             <View style={styles.row}>
               <View>
                 <Text style={styles.textMedium}>{program.lessons}-lesson bank</Text>

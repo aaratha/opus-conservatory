@@ -4,13 +4,19 @@ import { Pressable, Text, View } from 'react-native';
 import { Avatar } from '@/components/Avatar';
 import { useAppStyles } from '@/components/useAppStyles';
 
-const upcomingLessons = [
-  { id: '1', with: 'Dana Ruiz', when: 'Mon, Sep 8 · 4:00 PM' },
-  { id: '2', with: 'Dana Ruiz', when: 'Mon, Sep 15 · 4:00 PM' },
-];
+const MOCK_DATES = ['Mon, Sep 8 · 4:00 PM', 'Mon, Sep 15 · 4:00 PM'];
 
-export function UpcomingLessonsSection() {
+export function UpcomingLessonsSection({
+  instructorName = 'Dana Ruiz',
+}: {
+  instructorName?: string;
+}) {
   const { styles } = useAppStyles();
+  const upcomingLessons = MOCK_DATES.map((when, index) => ({
+    id: String(index + 1),
+    with: instructorName,
+    when,
+  }));
 
   return (
     <View style={styles.section}>
@@ -26,7 +32,10 @@ export function UpcomingLessonsSection() {
               </View>
             </View>
             <Link
-              href={{ pathname: '/scheduler/reschedule', params: { lessonId: lesson.id } }}
+              href={{
+                pathname: '/scheduler/reschedule',
+                params: { lessonId: lesson.id, instructorName: lesson.with },
+              }}
               asChild>
               <Pressable style={styles.pill}>
                 <Text style={styles.pillText}>Reschedule</Text>

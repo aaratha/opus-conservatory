@@ -6,7 +6,10 @@ import { InstructorAvailability } from '@/components/scheduler/InstructorAvailab
 import { useAppStyles } from '@/components/useAppStyles';
 
 export default function RescheduleLessonScreen() {
-  const { lessonId } = useLocalSearchParams<{ lessonId: string }>();
+  const { lessonId, instructorName } = useLocalSearchParams<{
+    lessonId: string;
+    instructorName?: string;
+  }>();
   const router = useRouter();
   const { styles } = useAppStyles();
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
@@ -18,7 +21,7 @@ export default function RescheduleLessonScreen() {
         <Text style={styles.textMuted}>Rescheduling lesson #{lessonId}.</Text>
       </View>
       <InstructorAvailability
-        instructorName="Dana Ruiz"
+        instructorName={instructorName ?? 'your teacher'}
         selectedSlot={selectedSlot}
         onSelectSlot={setSelectedSlot}
       />

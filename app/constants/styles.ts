@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import Colors from './Colors';
-import { fontSize, radii, spacing } from './theme';
+import { fontFamily, fontSize, hairline, radii, spacing } from './theme';
 
 type ColorScheme = keyof typeof Colors;
 
@@ -28,8 +28,8 @@ export function createStyles(scheme: ColorScheme) {
       gap: spacing.xs,
     },
     heroTitle: {
+      fontFamily: fontFamily.serifBold,
       fontSize: fontSize.hero,
-      fontWeight: '700',
       color: c.text,
     },
     heroSubtitle: {
@@ -37,12 +37,19 @@ export function createStyles(scheme: ColorScheme) {
       color: c.muted,
     },
 
+    // Big serif numerals — stopwatch display, prices, lesson counts.
+    displayNumber: {
+      fontFamily: fontFamily.serifBold,
+      fontSize: fontSize.display,
+      color: c.text,
+    },
+
     section: {
       gap: spacing.md,
     },
     sectionTitle: {
+      fontFamily: fontFamily.serif,
       fontSize: fontSize.lg,
-      fontWeight: '700',
       color: c.text,
     },
     eyebrow: {
@@ -53,15 +60,19 @@ export function createStyles(scheme: ColorScheme) {
       letterSpacing: 0.6,
     },
 
+    // Definition via hairline rule, not elevation — no shadow, small radius.
     card: {
       backgroundColor: c.surface,
-      borderRadius: radii.lg,
+      borderWidth: hairline,
+      borderColor: c.border,
+      borderRadius: radii.sm,
       paddingHorizontal: spacing.lg,
       paddingVertical: spacing.md,
       gap: spacing.sm,
     },
     cardHighlight: {
-      borderWidth: 2,
+      backgroundColor: c.accentSoft,
+      borderWidth: hairline * 2,
       borderColor: c.tint,
     },
     row: {
@@ -108,7 +119,7 @@ export function createStyles(scheme: ColorScheme) {
 
     button: {
       alignItems: 'center',
-      borderRadius: radii.lg,
+      borderRadius: radii.md,
       paddingVertical: spacing.md,
       backgroundColor: c.tint,
     },
@@ -123,11 +134,14 @@ export function createStyles(scheme: ColorScheme) {
     buttonTextDisabled: {
       color: c.muted,
     },
+    // Hairline-bordered, not filled — a second button reads as "line", not elevation.
     buttonGhost: {
       alignItems: 'center',
-      borderRadius: radii.lg,
+      borderRadius: radii.md,
+      borderWidth: hairline,
+      borderColor: c.tint,
       paddingVertical: spacing.md,
-      backgroundColor: c.surface,
+      backgroundColor: 'transparent',
     },
     buttonGhostText: {
       fontSize: fontSize.sm,
